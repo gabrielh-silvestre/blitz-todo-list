@@ -1,24 +1,16 @@
 import request from 'supertest';
 import shelljs from 'shelljs';
 
-const BASE_URL = 'http://localhost:3001/api/v1';
-const ENDPOINT = '/users';
+import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { newUser } from '../../utils/mocks';
 
-const DATABASE_RESET = 'npx prisma db seed';
-
-const NEW_USER = {
-  name: 'Test User',
-  email: 'test@email.com',
-  password: 'test_password',
-};
-
-describe('Test endpoint POST /user', () => {
+describe('Test endpoint POST /users', () => {
   beforeEach(() => {
     shelljs.exec(DATABASE_RESET, { silent: true });
   });
 
   it('Successfully create a new user', async () => {
-    const response = await request(BASE_URL).post(ENDPOINT).send(NEW_USER);
+    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('token');
@@ -32,9 +24,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user without email', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         email: undefined,
       });
 
@@ -45,9 +37,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user with invalid email', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         email: 'invalid_email',
       });
 
@@ -58,9 +50,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user without password', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         password: undefined,
       });
 
@@ -71,9 +63,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user with short password', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         password: 'short',
       });
 
@@ -84,9 +76,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user with long password', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         password: 'long_password'.repeat(16),
       });
 
@@ -97,9 +89,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user without name', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         name: undefined,
       });
 
@@ -110,9 +102,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user with short name', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         name: 'sh',
       });
 
@@ -123,9 +115,9 @@ describe('Test endpoint POST /user', () => {
 
   it('Fail to create a new user with long name', async () => {
     const response = await request(BASE_URL)
-      .post(ENDPOINT)
+      .post(ENDPOINTS.USER)
       .send({
-        ...NEW_USER,
+        ...newUser,
         name: 'long_name'.repeat(16),
       });
 
@@ -135,9 +127,9 @@ describe('Test endpoint POST /user', () => {
   });
 
   it('Fail to create a new user with duplicate email', async () => {
-    await request(BASE_URL).post(ENDPOINT).send(NEW_USER);
+    await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
 
-    const response = await request(BASE_URL).post(ENDPOINT).send(NEW_USER);
+    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
 
     expect(response.status).toBe(409);
     expect(response.body).toHaveProperty('message');
