@@ -65,6 +65,25 @@ describe('Test endpoint POST /tasks', () => {
     expect(response.body.subTasks).toBeInstanceOf(Array);
   });
 
+  it('Fail to create a new task without token', async () => {
+    const response = await request(BASE_URL).post(ENDPOINTS.TASK).send(newTask);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toBe('Unauthorized');
+  });
+
+  it('Fail to create a new task with invalid token', async () => {
+    const response = await request(BASE_URL)
+      .post(ENDPOINTS.TASK)
+      .auth(email, 'invalid')
+      .send(newTask);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toBe('Invalid token');
+  });
+
   it('Fail to create a new task without title', async () => {
     const response = await request(BASE_URL)
       .post(ENDPOINTS.TASK)
