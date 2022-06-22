@@ -6,7 +6,7 @@ services:
     restart: on-failure
     working_dir: /app/frontend
     volumes:
-      - ./frontend:/app/frontend
+      - ./front-end:/app/frontend
     ports:
       - ${FRONT_PORT}:3000
     environment:
@@ -16,40 +16,38 @@ services:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ['CMD', 'lsof', '-t', '-i:3000']
-      interval: 30s
+      test: ['CMD', 'lsof', '-t', '-i:3000'] # Caso utilize outra porta interna para o front, altere ela aqui também
       timeout: 10s
       retries: 10
-      start_period: 30s
   backend:
     image: node:16-alpine
     command: npm run dev
     restart: on-failure
     working_dir: /app/backend
     volumes:
-      - ./backend:/app/backend
+      - ./back-end:/app/backend
     ports:
       - ${BACK_PORT}:3001
     tty: true
+    stdin_open: true
     depends_on:
       mysql:
         condition: service_healthy
     environment:
-      - PORT=${BACK_PORT}
+      - BACK_PORT=${BACK_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
       - DB_PORT=${DB_PORT}
-      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      - DATABASE_URL=mysql://root:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
     healthcheck:
-      test: ['CMD', 'lsof', '-t', '-i:3001']
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
+      test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
+      timeout: 15s
+      retries: 5
   mysql:
     image: mysql:8.0.21
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - ${DB_PORT}:3306
     environment:
@@ -60,10 +58,8 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
     restart: 'always'
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 15s
+      retries: 5
     cap_add:
       - SYS_NICE # Deve omitir alertas menores
