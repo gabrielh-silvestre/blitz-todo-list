@@ -1,7 +1,7 @@
 import { FIRST_USER_ID, SECOND_USER_ID, THIRD_USER_ID } from './users.mock';
 
-const FIRST_MAIN_TASK_ID = 'cl4q28wy400073a82ix9h5bmy';
-const SECOND_MAIN_TASK_ID = 'cl4q299ve00093a82o9pco4fy';
+export const FIRST_MAIN_TASK_ID = 'cl4q28wy400073a82ix9h5bmy';
+export const SECOND_MAIN_TASK_ID = 'cl4q299ve00093a82o9pco4fy';
 
 export const tasks = [
   {
