@@ -1,32 +1,51 @@
 version: '3.9'
 services:
+  frontend:
+    image: node:16-alpine
+    command: npm run dev
+    restart: on-failure
+    working_dir: /app/frontend
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - ${FRONT_PORT}:3000
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'lsof', '-t', '-i:3000']
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
   backend:
     image: node:16-alpine
     command: npm run dev
     restart: on-failure
     working_dir: /app/backend
     volumes:
-      - .:/app/backend
+      - ./backend:/app/backend
     ports:
-      - ${PORT}:3001
+      - ${BACK_PORT}:3001
     tty: true
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
     environment:
-      - PORT=${PORT}
+      - PORT=${BACK_PORT}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASSWORD}
       - DB_HOST=db
       - DB_NAME=${DB_DATABASE}
       - DB_PORT=${DB_PORT}
     healthcheck:
-      test: ['CMD', 'lsof', '-t', '-i:3001'] # Caso utilize outra porta interna para o back, altere ela aqui também
+      test: ['CMD', 'lsof', '-t', '-i:3001']
+      interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 10
+      start_period: 30s
   mysql:
     image: mysql:8.0.21
-    container_name: db
     ports:
       - ${DB_PORT}:3306
     environment:
