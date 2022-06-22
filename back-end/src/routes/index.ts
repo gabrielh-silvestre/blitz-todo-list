@@ -7,7 +7,7 @@ import { UserRouter } from './user.router';
 const router = Router();
 
 router.use('/login', AuthRouter);
-router.use('/user', UserRouter);
-router.use('/task', TaskRouter);
+router.use('/users', UserRouter);
+router.use('/tasks', TaskRouter);
 
 export { router };
