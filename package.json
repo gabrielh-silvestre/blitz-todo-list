@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:front": "cd front-end && npm install",
+    "install:back": "cd back-end && npm install",
+    "install": "npm run install:front && npm run install:back"
   },
   "keywords": [],
   "author": "",
