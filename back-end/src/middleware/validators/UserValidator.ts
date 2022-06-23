@@ -10,6 +10,11 @@ class UserValidator {
     password: Joi.string().min(8).max(16).required(),
   });
 
+  private static readonly LOGIN_USER_VALIDATOR = Joi.object({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+  });
+
   private static readonly normalizeJoiError = (errorMessage: string): never => {
     throw errorMessage.includes('required')
       ? new BadRequestError(errorMessage)
@@ -18,6 +23,16 @@ class UserValidator {
 
   public static validateCreateUser: Handler = (req, _res, next) => {
     const { error } = UserValidator.CREATE_USER_VALIDATOR.validate(req.body);
+
+    if (error) {
+      UserValidator.normalizeJoiError(error.details[0].message);
+    }
+
+    next();
+  };
+
+  public static validateLoginUser: Handler = (req, _res, next) => {
+    const { error } = UserValidator.LOGIN_USER_VALIDATOR.validate(req.body);
 
     if (error) {
       UserValidator.normalizeJoiError(error.details[0].message);
