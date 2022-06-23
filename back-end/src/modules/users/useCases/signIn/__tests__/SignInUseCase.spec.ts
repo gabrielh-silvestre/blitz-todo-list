@@ -27,7 +27,7 @@ const FOUNDED_USER: UserAttributes = {
   updatedAt: new Date(),
 };
 
-describe.only('Test SignInUseCase', () => {
+describe('Test SignInUseCase', () => {
   let findByEmailStub: Sinon.SinonStub;
   let generateTokenStub: Sinon.SinonStub;
 
@@ -64,8 +64,8 @@ describe.only('Test SignInUseCase', () => {
   describe('Error case', () => {
     before(() => {
       findByEmailStub = Sinon.stub(UserRepository.prototype, 'findByEmail');
-      findByEmailStub.onCall(1).resolves(null);
-      findByEmailStub.onCall(2).resolves({ ...LOGIN_USER, password: 'wrong' });
+      findByEmailStub.onFirstCall().resolves(null);
+      findByEmailStub.onSecondCall().resolves(LOGIN_USER);
 
       generateTokenStub = Sinon.stub(TokenService, 'generateToken');
       generateTokenStub.throws(new Error('should not reach this point'));
