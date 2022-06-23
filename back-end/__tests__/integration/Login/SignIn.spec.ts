@@ -6,7 +6,9 @@ import { expect } from 'chai';
 import { app } from '../../../src/app';
 
 import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
-import { newUser } from '../../utils/mocks';
+import { users } from '../../utils/mocks';
+
+const [{ email, password }] = users;
 
 describe('Test endpoint POST /login', () => {
   beforeEach(() => {
@@ -14,7 +16,9 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Successfully login', async () => {
-    const response = await request(app).post(ENDPOINTS.LOGIN).send(newUser);
+    const response = await request(app)
+      .post(ENDPOINTS.LOGIN)
+      .send({ email, password });
 
     expect(response.status).to.be.equal(200);
     expect(response.body).to.have.property('token');
@@ -22,12 +26,10 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Fail to login with invalid email', async () => {
-    const response = await request(app)
-      .post(ENDPOINTS.LOGIN)
-      .send({
-        ...newUser,
-        email: 'invalid_email',
-      });
+    const response = await request(app).post(ENDPOINTS.LOGIN).send({
+      email: 'invalid_email',
+      password,
+    });
 
     expect(response.status).to.be.equal(404);
     expect(response.body).to.have.property('message');
@@ -35,12 +37,10 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Fail to login with invalid password', async () => {
-    const response = await request(app)
-      .post(ENDPOINTS.LOGIN)
-      .send({
-        ...newUser,
-        password: 'invalid_password',
-      });
+    const response = await request(app).post(ENDPOINTS.LOGIN).send({
+      email,
+      password: 'invalid_password',
+    });
 
     expect(response.status).to.be.equal(404);
     expect(response.body).to.have.property('message');
