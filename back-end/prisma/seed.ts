@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { hash } from 'argon2';
+import { hash } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -17,19 +17,19 @@ async function main() {
         id: firstUserId,
         name: 'John',
         email: 'john@email.com',
-        password: await hash('123456'),
+        password: await hash('123456', 8),
       },
       {
         id: secondUserId,
         name: 'Jane',
         email: 'jane@email.com',
-        password: await hash('123456'),
+        password: await hash('123456', 8),
       },
       {
         id: thirdUserId,
         name: 'Jack',
         email: 'jack@email.com',
-        password: await hash('123456'),
+        password: await hash('123456', 8),
       },
     ],
   });
