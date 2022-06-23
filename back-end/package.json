@@ -10,7 +10,7 @@
     "predev": "prisma migrate dev",
     "dev": "nodemon src/server.ts",
     "pretest": "prisma migrate dev",
-    "test": "mocha -r ts-node/register/transpile-only __tests__/**/*.spec.ts",
+    "test": "mocha --parallel -r ts-node/register/transpile-only __tests__/**/*.spec.ts",
     "test:unit": "mocha -r ts-node/register/transpile-only __tests__/unit/**/*.spec.ts",
     "test:integration": "mocha -r ts-node/register/transpile-only __tests__/integration/**/*.spec.ts",
     "test:coverage": "nyc npm test"
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.1",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/mocha": "^9.1.1",
