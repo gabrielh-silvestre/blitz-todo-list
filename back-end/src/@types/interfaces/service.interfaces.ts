@@ -5,4 +5,9 @@ interface ITokenService {
   verifyToken(token: string): UserIdentifier;
 }
 
-export { ITokenService };
+interface IEncryptService {
+  encrypt(password: string): Promise<string>;
+  compare(password: string, hash: string): Promise<boolean>;
+}
+
+export { ITokenService, IEncryptService };
