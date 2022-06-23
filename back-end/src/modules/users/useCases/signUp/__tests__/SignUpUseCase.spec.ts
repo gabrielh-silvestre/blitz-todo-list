@@ -6,11 +6,17 @@ import type {
   UserCreateAttributes,
 } from '../../../../../@types/types';
 
+import { EncryptService } from '../../../../../services/EncryptService';
 import { TokenService } from '../../../../../services/TokenService';
+
 import { UserRepository } from '../../../repository';
 import { SignUpUseCase } from '../SignUpUseCase';
 
-const signUpUseCase = new SignUpUseCase(new UserRepository(), TokenService);
+const signUpUseCase = new SignUpUseCase(
+  new UserRepository(),
+  TokenService,
+  EncryptService
+);
 
 const FAKE_TOKEN = '0n0v19nASV-V0n09Masvmz0-xasvzx';
 
@@ -31,6 +37,7 @@ describe('Test SignUpUseCase', () => {
   let findByEmailStub: Sinon.SinonStub;
   let createStub: Sinon.SinonStub;
   let generateTokenStub: Sinon.SinonStub;
+  let hashPasswordStub: Sinon.SinonStub;
 
   describe('Success case', () => {
     before(() => {
@@ -42,12 +49,16 @@ describe('Test SignUpUseCase', () => {
 
       generateTokenStub = Sinon.stub(TokenService, 'generateToken');
       generateTokenStub.returns(FAKE_TOKEN);
+
+      hashPasswordStub = Sinon.stub(EncryptService, 'compare');
+      hashPasswordStub.returns('12345678');
     });
 
     after(() => {
       findByEmailStub.restore();
       createStub.restore();
       generateTokenStub.restore();
+      hashPasswordStub.restore();
     });
 
     it('should return a success response', async () => {
@@ -76,12 +87,16 @@ describe('Test SignUpUseCase', () => {
 
       generateTokenStub = Sinon.stub(TokenService, 'generateToken');
       generateTokenStub.throws(new Error('should not reach this point'));
+
+      hashPasswordStub = Sinon.stub(EncryptService, 'compare');
+      hashPasswordStub.throws(new Error('should not reach this point'));
     });
 
     after(() => {
       findByEmailStub.restore();
       createStub.restore();
       generateTokenStub.restore();
+      hashPasswordStub.restore();
     });
 
     it('should throw an error with status code and message', async () => {

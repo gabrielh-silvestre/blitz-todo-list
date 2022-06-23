@@ -6,11 +6,17 @@ import type {
   UserAuthAttributes,
 } from '../../../../../@types/types';
 
+import { EncryptService } from '../../../../../services/EncryptService';
 import { TokenService } from '../../../../../services/TokenService';
+
 import { UserRepository } from '../../../repository';
 import { SignInUseCase } from '../SignInUseCase';
 
-const signInUseCase = new SignInUseCase(new UserRepository(), TokenService);
+const signInUseCase = new SignInUseCase(
+  new UserRepository(),
+  TokenService,
+  EncryptService
+);
 
 const FAKE_TOKEN = '0n0v19nASV-V0n09Masvmz0-xasvzx';
 
@@ -30,6 +36,7 @@ const FOUNDED_USER: UserAttributes = {
 describe('Test SignInUseCase', () => {
   let findByEmailStub: Sinon.SinonStub;
   let generateTokenStub: Sinon.SinonStub;
+  let compareHashStub: Sinon.SinonStub;
 
   describe('Success case', () => {
     before(() => {
@@ -38,11 +45,15 @@ describe('Test SignInUseCase', () => {
 
       generateTokenStub = Sinon.stub(TokenService, 'generateToken');
       generateTokenStub.returns(FAKE_TOKEN);
+
+      compareHashStub = Sinon.stub(EncryptService, 'compare');
+      compareHashStub.returns(true);
     });
 
     after(() => {
       findByEmailStub.restore();
       generateTokenStub.restore();
+      compareHashStub.restore();
     });
 
     it('should return a success response', async () => {
@@ -69,11 +80,15 @@ describe('Test SignInUseCase', () => {
 
       generateTokenStub = Sinon.stub(TokenService, 'generateToken');
       generateTokenStub.throws(new Error('should not reach this point'));
+
+      compareHashStub = Sinon.stub(EncryptService, 'compare');
+      compareHashStub.returns(false);
     });
 
     after(() => {
       findByEmailStub.restore();
       generateTokenStub.restore();
+      compareHashStub.restore();
     });
 
     it('when email is not registered, should throw an error with status code and message', async () => {

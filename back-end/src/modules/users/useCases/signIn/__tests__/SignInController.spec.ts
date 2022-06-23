@@ -7,14 +7,20 @@ import type {
   UserAuthAttributes,
 } from '../../../../../@types/types';
 
+import { EncryptService } from '../../../../../services/EncryptService';
 import { TokenService } from '../../../../../services/TokenService';
+
 import { UserRepository } from '../../../repository';
 import { SignInUseCase } from '../SignInUseCase';
 import { SignInController } from '../SignInController';
 
 import { response, request } from '../../../../../../__tests__/utils/mocks';
 
-const signInUseCase = new SignInUseCase(new UserRepository(), TokenService);
+const signInUseCase = new SignInUseCase(
+  new UserRepository(),
+  TokenService,
+  EncryptService
+);
 const signInController = new SignInController(signInUseCase);
 
 const FAKE_TOKEN = '0n0v19nASV-V0n09Masvmz0-xasvzx';
