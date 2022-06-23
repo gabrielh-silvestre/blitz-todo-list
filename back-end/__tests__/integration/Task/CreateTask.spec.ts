@@ -1,6 +1,8 @@
 import request from 'supertest';
 import shelljs from 'shelljs';
 
+import { expect } from 'chai';
+
 import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newTask, tasks, users } from '../../utils/mocks';
 
@@ -18,23 +20,23 @@ describe('Test endpoint POST /tasks', () => {
       .auth(email, password)
       .send(newTask);
 
-    expect(response.status).toBe(201);
+    expect(response.status).to.be.equal(201);
 
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('title');
-    expect(response.body).toHaveProperty('description');
-    expect(response.body).toHaveProperty('status');
-    expect(response.body).toHaveProperty('createdAt');
-    expect(response.body).toHaveProperty('subTasks');
+    expect(response.body).to.have.property('id');
+    expect(response.body).to.have.property('title');
+    expect(response.body).to.have.property('description');
+    expect(response.body).to.have.property('status');
+    expect(response.body).to.have.property('createdAt');
+    expect(response.body).to.have.property('subTasks');
 
-    expect(response.body).not.toHaveProperty('userId');
+    expect(response.body).not.to.have.property('userId');
 
-    expect(typeof response.body.id).toBe('string');
-    expect(typeof response.body.title).toBe('string');
-    expect(typeof response.body.description).toBe('string');
-    expect(typeof response.body.status).toBe('string');
-    expect(typeof response.body.createdAt).toBe('string');
-    expect(response.body.subTasks).toBeInstanceOf(Array);
+    expect(typeof response.body.id).to.be.equal('string');
+    expect(typeof response.body.title).to.be.equal('string');
+    expect(typeof response.body.description).to.be.equal('string');
+    expect(typeof response.body.status).to.be.equal('string');
+    expect(typeof response.body.createdAt).to.be.equal('string');
+    expect(response.body.subTasks).to.be.an('array');
   });
 
   it('Successfully create a new sub task', async () => {
@@ -46,31 +48,31 @@ describe('Test endpoint POST /tasks', () => {
         mainTask: mainTask.id,
       });
 
-    expect(response.status).toBe(201);
+    expect(response.status).to.be.equal(201);
 
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('title');
-    expect(response.body).toHaveProperty('description');
-    expect(response.body).toHaveProperty('status');
-    expect(response.body).toHaveProperty('createdAt');
-    expect(response.body).toHaveProperty('subTasks');
+    expect(response.body).to.have.property('id');
+    expect(response.body).to.have.property('title');
+    expect(response.body).to.have.property('description');
+    expect(response.body).to.have.property('status');
+    expect(response.body).to.have.property('createdAt');
+    expect(response.body).to.have.property('subTasks');
 
-    expect(response.body).not.toHaveProperty('userId');
+    expect(response.body).not.to.have.property('userId');
 
-    expect(typeof response.body.id).toBe('string');
-    expect(typeof response.body.title).toBe('string');
-    expect(typeof response.body.description).toBe('string');
-    expect(typeof response.body.status).toBe('string');
-    expect(typeof response.body.createdAt).toBe('string');
-    expect(response.body.subTasks).toBeInstanceOf(Array);
+    expect(typeof response.body.id).to.be.equal('string');
+    expect(typeof response.body.title).to.be.equal('string');
+    expect(typeof response.body.description).to.be.equal('string');
+    expect(typeof response.body.status).to.be.equal('string');
+    expect(typeof response.body.createdAt).to.be.equal('string');
+    expect(response.body.subTasks).to.be.an('array');
   });
 
   it('Fail to create a new task without token', async () => {
     const response = await request(BASE_URL).post(ENDPOINTS.TASK).send(newTask);
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Unauthorized');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Unauthorized');
   });
 
   it('Fail to create a new task with invalid token', async () => {
@@ -79,9 +81,9 @@ describe('Test endpoint POST /tasks', () => {
       .auth(email, 'invalid')
       .send(newTask);
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Invalid token');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Invalid token');
   });
 
   it('Fail to create a new task without title', async () => {
@@ -93,9 +95,9 @@ describe('Test endpoint POST /tasks', () => {
         title: undefined,
       });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Title is required');
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Title is required');
   });
 
   it('Fail to create a new task with short title', async () => {
@@ -107,9 +109,9 @@ describe('Test endpoint POST /tasks', () => {
         title: 'shor',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Title must be at least 5 characters');
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Title must be at least 5 characters');
   });
 
   it('Fail to create a new task with long title', async () => {
@@ -121,9 +123,9 @@ describe('Test endpoint POST /tasks', () => {
         title: 'long_title'.repeat(12),
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Title must be less than 12 characters');
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Title must be less than 12 characters');
   });
 
   it('Fail to create a new task with empty description', async () => {
@@ -135,9 +137,9 @@ describe('Test endpoint POST /tasks', () => {
         description: '',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Description must not be empty');
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Description must not be empty');
   });
 
   it('Fail to create a new task with long description', async () => {
@@ -149,9 +151,9 @@ describe('Test endpoint POST /tasks', () => {
         description: 'long_description'.repeat(80),
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe(
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal(
       'Description must be less than 80 characters'
     );
   });
@@ -165,9 +167,9 @@ describe('Test endpoint POST /tasks', () => {
         status: 'DONE',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('status should not be exists');
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('status should not be exists');
   });
 
   it('Fail to create a new task with duplicate title', async () => {
@@ -181,9 +183,9 @@ describe('Test endpoint POST /tasks', () => {
       .auth(email, password)
       .send(newTask);
 
-    expect(response.status).toBe(409);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Title already exists');
+    expect(response.status).to.be.equal(409);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Title already exists');
   });
 
   it('Fail to create a new sub task with invalid main task', async () => {
@@ -195,8 +197,8 @@ describe('Test endpoint POST /tasks', () => {
         mainTask: 'invalid_id',
       });
 
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Main task not found');
+    expect(response.status).to.be.equal(404);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Main task not found');
   });
 });

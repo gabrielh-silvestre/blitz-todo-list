@@ -1,6 +1,8 @@
 import request from 'supertest';
 import shelljs from 'shelljs';
 
+import { expect } from 'chai';
+
 import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newTask, tasks, users } from '../../utils/mocks';
 
@@ -24,20 +26,20 @@ describe('Test endpoint PUT /task/:id', () => {
       .auth(email, password)
       .send(TASK_TO_UPDATE);
 
-    expect(response.status).toBe(200);
+    expect(response.status).to.be.equal(200);
 
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('title');
-    expect(response.body).toHaveProperty('description');
-    expect(response.body).toHaveProperty('status');
-    expect(response.body).toHaveProperty('subTasks');
-    expect(response.body).toHaveProperty('createdAt');
-    expect(response.body).toHaveProperty('lastUpdate');
-    expect(response.body).toHaveProperty('completedAt');
+    expect(response.body).to.have.property('id');
+    expect(response.body).to.have.property('title');
+    expect(response.body).to.have.property('description');
+    expect(response.body).to.have.property('status');
+    expect(response.body).to.have.property('subTasks');
+    expect(response.body).to.have.property('createdAt');
+    expect(response.body).to.have.property('lastUpdate');
+    expect(response.body).to.have.property('completedAt');
 
-    expect(response.body).not.toHaveProperty('userId');
+    expect(response.body).not.to.have.property('userId');
 
-    expect(response.body.subTasks).toBeInstanceOf(Array);
+    expect(response.body.subTasks).to.be.an('array');;
   });
 
   it('Fail to update a task without title', async () => {
@@ -49,9 +51,9 @@ describe('Test endpoint PUT /task/:id', () => {
         title: undefined,
       });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('"title" is required');
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('"title" is required');
   });
 
   it('Fail to update a task with short title', async () => {
@@ -63,9 +65,9 @@ describe('Test endpoint PUT /task/:id', () => {
         title: 'shor',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe(
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal(
       '"title" length must be at least 5 characters long'
     );
   });
@@ -79,9 +81,9 @@ describe('Test endpoint PUT /task/:id', () => {
         title: 'long_title'.repeat(12),
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe(
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal(
       '"title" length must be less than or equal to 12 characters long'
     );
   });
@@ -95,9 +97,9 @@ describe('Test endpoint PUT /task/:id', () => {
         description: undefined,
       });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('"description" is required');
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('"description" is required');
   });
 
   it('Fail to update a task with empty description', async () => {
@@ -109,9 +111,9 @@ describe('Test endpoint PUT /task/:id', () => {
         description: '',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('"description" should not be empty');
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('"description" should not be empty');
   });
 
   it('Fail to update a task with long description', async () => {
@@ -123,9 +125,9 @@ describe('Test endpoint PUT /task/:id', () => {
         description: 'long_description'.repeat(80),
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe(
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal(
       '"description" length must be less than or equal to 80 characters long'
     );
   });
@@ -139,9 +141,9 @@ describe('Test endpoint PUT /task/:id', () => {
         status: undefined,
       });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('"status" is required');
+    expect(response.status).to.be.equal(400);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('"status" is required');
   });
 
   it('Fail to update a task with invalid status', async () => {
@@ -153,9 +155,9 @@ describe('Test endpoint PUT /task/:id', () => {
         status: 'INVALID',
       });
 
-    expect(response.status).toBe(422);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe(
+    expect(response.status).to.be.equal(422);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal(
       '"status" must be one of [TODO, IN_PROGRESS, DONE, COMPLETED]'
     );
   });
@@ -169,9 +171,9 @@ describe('Test endpoint PUT /task/:id', () => {
         mainTask: 'INVALID',
       });
 
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Main task not found');
+    expect(response.status).to.be.equal(404);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Main task not found');
   });
 
   it('Fail to update a task with duplicate title', async () => {
@@ -185,9 +187,9 @@ describe('Test endpoint PUT /task/:id', () => {
       .auth(email, password)
       .send(TASK_TO_UPDATE);
 
-    expect(response.status).toBe(409);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Task with this title already exists');
+    expect(response.status).to.be.equal(409);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Task with this title already exists');
   });
 
   it('Fail to update a task with invalid id', async () => {
@@ -196,8 +198,8 @@ describe('Test endpoint PUT /task/:id', () => {
       .auth(email, password)
       .send(TASK_TO_UPDATE);
 
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Task not found');
+    expect(response.status).to.be.equal(404);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Task not found');
   });
 });

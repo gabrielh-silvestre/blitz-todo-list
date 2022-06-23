@@ -1,6 +1,8 @@
 import request from 'supertest';
 import shelljs from 'shelljs';
 
+import { expect } from 'chai';
+
 import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { users } from '../../utils/mocks';
 
@@ -16,29 +18,29 @@ describe('Test endpoint GET /tasks', () => {
       .get(ENDPOINTS.TASK)
       .auth(email, password);
 
-    expect(response.status).toBe(200);
+    expect(response.status).to.be.equal(200);
 
-    expect(response.body).toBeInstanceOf(Array);
-    expect(response.body[0]).toHaveProperty('id');
-    expect(response.body[0]).toHaveProperty('title');
-    expect(response.body[0]).toHaveProperty('description');
-    expect(response.body[0]).toHaveProperty('status');
-    expect(response.body[0]).toHaveProperty('subTasks');
-    expect(response.body[0]).toHaveProperty('createdAt');
-    expect(response.body[0]).toHaveProperty('lastUpdate');
-    expect(response.body[0]).toHaveProperty('completedAt');
+    expect(response.body).to.be.an('array');
+    expect(response.body[0]).to.have.property('id');
+    expect(response.body[0]).to.have.property('title');
+    expect(response.body[0]).to.have.property('description');
+    expect(response.body[0]).to.have.property('status');
+    expect(response.body[0]).to.have.property('subTasks');
+    expect(response.body[0]).to.have.property('createdAt');
+    expect(response.body[0]).to.have.property('lastUpdate');
+    expect(response.body[0]).to.have.property('completedAt');
 
-    expect(response.body[0]).not.toHaveProperty('userId');
+    expect(response.body[0]).not.to.have.property('userId');
 
-    expect(response.body[0].subTasks).toBeInstanceOf(Array);
+    expect(response.body[0].subTasks).to.be.an('array');
   });
 
   it('Fail to get all tasks without token', async () => {
     const response = await request(BASE_URL).get(ENDPOINTS.TASK);
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Unauthorized');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Unauthorized');
   });
 
   it('Fail to get all tasks with invalid token', async () => {
@@ -46,8 +48,8 @@ describe('Test endpoint GET /tasks', () => {
       .get(ENDPOINTS.TASK)
       .auth(email, 'invalid');
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Invalid token');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Invalid token');
   });
 });

@@ -1,6 +1,8 @@
 import request from 'supertest';
 import shelljs from 'shelljs';
 
+import { expect } from 'chai';
+
 import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { tasks, users } from '../../utils/mocks';
 
@@ -17,17 +19,17 @@ describe('Test endpoint DELETE /tasks/:id', () => {
       .delete(`${ENDPOINTS.TASK}/${id}`)
       .auth(email, password);
 
-    expect(response.status).toBe(200);
+    expect(response.status).to.be.equal(200);
 
-    expect(response.body).toBeUndefined();
+    expect(response.body).to.be.undefined;
   });
 
   it('Fail to delete a task without token', async () => {
     const response = await request(BASE_URL).delete(`${ENDPOINTS.TASK}/${id}`);
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Unauthorized');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Unauthorized');
   });
 
   it('Fail to delete a task with invalid token', async () => {
@@ -35,9 +37,9 @@ describe('Test endpoint DELETE /tasks/:id', () => {
       .delete(`${ENDPOINTS.TASK}/${id}`)
       .auth(email, 'invalid');
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Invalid token');
+    expect(response.status).to.be.equal(401);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Invalid token');
   });
 
   it('Fail to delete a task with invalid id', async () => {
@@ -45,8 +47,8 @@ describe('Test endpoint DELETE /tasks/:id', () => {
       .delete(`${ENDPOINTS.TASK}/invalid`)
       .auth(email, password);
 
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toBe('Task not found');
+    expect(response.status).to.be.equal(404);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Task not found');
   });
 });
