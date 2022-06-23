@@ -2,8 +2,6 @@ import Sinon from 'sinon';
 import { expect } from 'chai';
 
 import type {
-  SignReturn,
-  SuccessCase,
   UserAttributes,
   UserCreateAttributes,
 } from '../../../../../@types/types';
@@ -15,11 +13,6 @@ import { SignUpUseCase } from '../SignUpUseCase';
 const signUpUseCase = new SignUpUseCase(new UserRepository(), TokenService);
 
 const FAKE_TOKEN = '0n0v19nASV-V0n09Masvmz0-xasvzx';
-
-const SUCCESS_RESPONSE: SuccessCase<SignReturn> = {
-  statusCode: 201,
-  payload: { token: `Bearer ${FAKE_TOKEN}` },
-};
 
 const CREATE_USER: UserCreateAttributes = {
   name: 'John Doe',
