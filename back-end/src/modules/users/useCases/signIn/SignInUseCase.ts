@@ -2,6 +2,7 @@ import { NotFoundError } from 'restify-errors';
 import { StatusCodes } from 'http-status-codes';
 
 import type {
+  IEncryptService,
   ITokenService,
   IUserRepository,
 } from '../../../../@types/interfaces';
@@ -15,7 +16,8 @@ import type {
 class SignInUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly tokenService: ITokenService
+    private readonly tokenService: ITokenService,
+    private readonly encryptService: IEncryptService
   ) {}
 
   private async isUserRegistered(
@@ -31,12 +33,15 @@ class SignInUseCase {
   }
 
   private async isUserPasswordValid(
-    user: UserAttributes,
+    registeredPassword: string,
     tryPassword: string
   ): Promise<void | never> {
-    const { password } = user;
+    const isValid = await this.encryptService.compare(
+      tryPassword,
+      registeredPassword
+    );
 
-    if (password !== tryPassword) {
+    if (!isValid) {
       throw new NotFoundError('Invalid credentials');
     }
   }
@@ -44,7 +49,7 @@ class SignInUseCase {
   async execute(user: UserAuthAttributes): Promise<SuccessCase<SignReturn>> {
     const foundUser = await this.isUserRegistered(user.email);
 
-    await this.isUserPasswordValid(foundUser, user.password);
+    await this.isUserPasswordValid(foundUser.password, user.password);
 
     const token = this.tokenService.generateToken({ id: foundUser.id });
 

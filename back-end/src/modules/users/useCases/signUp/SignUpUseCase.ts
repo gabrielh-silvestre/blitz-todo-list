@@ -2,6 +2,7 @@ import { ConflictError } from 'restify-errors';
 import { StatusCodes } from 'http-status-codes';
 
 import type {
+  IEncryptService,
   ITokenService,
   IUserRepository,
 } from '../../../../@types/interfaces';
@@ -14,7 +15,8 @@ import type {
 class SignUpUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly tokenService: ITokenService
+    private readonly tokenService: ITokenService,
+    private readonly encryptService: IEncryptService
   ) {}
 
   private async isUniqueEmail(email: string): Promise<void | never> {
@@ -25,12 +27,25 @@ class SignUpUseCase {
     }
   }
 
+  private async hashPassword(
+    user: UserCreateAttributes
+  ): Promise<UserCreateAttributes> {
+    const hashedPassword = await this.encryptService.encrypt(user.password);
+
+    return {
+      ...user,
+      password: hashedPassword,
+    };
+  }
+
   async execute(
     newUser: UserCreateAttributes
   ): Promise<SuccessCase<SignReturn>> {
     await this.isUniqueEmail(newUser.email);
 
-    const { id } = await this.userRepository.create(newUser);
+    const hashedUser = await this.hashPassword(newUser);
+
+    const { id } = await this.userRepository.create(hashedUser);
 
     const token = this.tokenService.generateToken({ id });
 
