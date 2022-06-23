@@ -10,8 +10,8 @@
     "predev": "prisma migrate dev",
     "dev": "nodemon src/server.ts",
     "pretest": "prisma migrate dev",
-    "test": "mocha --parallel -r ts-node/register/transpile-only __tests__/**/*.spec.ts",
-    "test:unit": "mocha -r ts-node/register/transpile-only __tests__/unit/**/*.spec.ts",
+    "test": "mocha --parallel -r ts-node/register/transpile-only **/__tests__/**/*.spec.ts",
+    "test:unit": "mocha -r ts-node/register/transpile-only src/**/__tests__/**/*.spec.ts",
     "test:integration": "mocha -r ts-node/register/transpile-only __tests__/integration/**/*.spec.ts",
     "test:coverage": "nyc npm test"
   },
