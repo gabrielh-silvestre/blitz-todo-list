@@ -1,5 +1,3 @@
-import { NextFunction, response, request } from 'express';
-
 import Sinon from 'sinon';
 import { expect } from 'chai';
 
@@ -13,6 +11,8 @@ import { TokenService } from '../../../../../services/TokenService';
 import { UserRepository } from '../../../repository';
 import { SignUpUseCase } from '../SignUpUseCase';
 import { SignUpController } from '../SignUpController';
+
+import { response, request } from '../../../../../../__tests__/utils/mocks';
 
 const signUpUseCase = new SignUpUseCase(new UserRepository(), TokenService);
 const signUpController = new SignUpController(signUpUseCase);
@@ -34,19 +34,15 @@ describe('Test SignUpController', () => {
   let useCaseStub: Sinon.SinonStub;
   let spiedStatus: Sinon.SinonSpy;
   let spiedJson: Sinon.SinonSpy;
-  let spiedNext: Sinon.SinonSpy;
-  const next = { next: () => {} } as { next: NextFunction };
 
   before(() => {
     spiedStatus = Sinon.spy(response, 'status');
     spiedJson = Sinon.spy(response, 'json');
-    spiedNext = Sinon.spy(next, 'next');
   });
 
   after(() => {
     spiedStatus.restore();
     spiedJson.restore();
-    spiedNext.restore();
   });
 
   describe('Success case', () => {
