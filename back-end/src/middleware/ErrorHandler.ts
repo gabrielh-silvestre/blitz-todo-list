@@ -7,6 +7,7 @@ class ErrorHandler {
       return err;
     }
 
+    console.log(err);
     return new InternalServerError(err, 'Internal Server Error');
   };
 
