@@ -20,6 +20,7 @@ describe('Test UserValidator, validateCreateUser handler', () => {
   after(() => {
     spiedStatus.restore();
     spiedJson.restore();
+    spiedNext.restore();
   });
 
   it('should throw an bad request error when req.body misses required fields', () => {
@@ -57,6 +58,43 @@ describe('Test UserValidator, validateCreateUser handler', () => {
     };
 
     UserValidator.validateCreateUser(request, response, next);
+    expect(spiedNext.called).to.be.true;
+  });
+});
+
+describe('Test UserValidator, validateLoginUser handler', () => {
+  let spiedStatus: Sinon.SinonSpy;
+  let spiedJson: Sinon.SinonSpy;
+  let spiedNext: Sinon.SinonSpy;
+
+  before(() => {
+    spiedStatus = Sinon.spy(response, 'status');
+    spiedJson = Sinon.spy(response, 'json');
+    spiedNext = Sinon.spy(ExpressMocks, 'next');
+  });
+
+  after(() => {
+    spiedStatus.restore();
+    spiedJson.restore();
+    spiedNext.restore();
+  });
+
+  it('should throw an bad request error when req.body misses required fields', () => {
+    request.body = { email: 'john@email.com' };
+
+    try {
+      UserValidator.validateLoginUser(request, response, next);
+      expect.fail('should throw an error');
+    } catch (error) {
+      expect(error).to.have.property('statusCode', 400);
+      expect(error).to.have.property('message', '"password" is required');
+    }
+  });
+
+  it('should call next when req.body is valid', () => {
+    request.body = { email: 'email@email.com', password: '12345678' };
+
+    UserValidator.validateLoginUser(request, response, next);
     expect(spiedNext.called).to.be.true;
   });
 });
