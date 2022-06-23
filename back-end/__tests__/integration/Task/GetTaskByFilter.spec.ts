@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { users, tasks } from '../../utils/mocks';
 
 const [{ email, password }] = users;
@@ -15,7 +17,7 @@ describe('Test endpoint GET /tasks/search?', () => {
   });
 
   it('Successfully get task by term', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .get(`${ENDPOINTS.TASK}/search?q=${title}`)
       .auth(email, password);
 
@@ -37,7 +39,7 @@ describe('Test endpoint GET /tasks/search?', () => {
   });
 
   it('Successfully get no tasks by term', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .get(`${ENDPOINTS.TASK}/search?q=invalid`)
       .auth(email, password);
 
@@ -48,7 +50,7 @@ describe('Test endpoint GET /tasks/search?', () => {
   });
 
   it('Fail to get task by term without token', async () => {
-    const response = await request(BASE_URL).get(
+    const response = await request(app).get(
       `${ENDPOINTS.TASK}/search?q=${title}`
     );
 
@@ -58,7 +60,7 @@ describe('Test endpoint GET /tasks/search?', () => {
   });
 
   it('Fail to get task by term with invalid token', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .get(`${ENDPOINTS.TASK}/search?q=${title}`)
       .auth(email, 'invalid');
 

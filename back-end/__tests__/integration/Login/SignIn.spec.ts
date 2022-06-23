@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newUser } from '../../utils/mocks';
 
 describe('Test endpoint POST /login', () => {
@@ -12,9 +14,7 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Successfully login', async () => {
-    const response = await request(BASE_URL)
-      .post(ENDPOINTS.LOGIN)
-      .send(newUser);
+    const response = await request(app).post(ENDPOINTS.LOGIN).send(newUser);
 
     expect(response.status).to.be.equal(200);
     expect(response.body).to.have.property('token');
@@ -22,7 +22,7 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Fail to login with invalid email', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.LOGIN)
       .send({
         ...newUser,
@@ -35,7 +35,7 @@ describe('Test endpoint POST /login', () => {
   });
 
   it('Fail to login with invalid password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.LOGIN)
       .send({
         ...newUser,

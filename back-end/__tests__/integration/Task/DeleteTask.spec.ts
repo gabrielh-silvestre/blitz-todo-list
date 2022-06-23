@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { tasks, users } from '../../utils/mocks';
 
 const [{ email, password }] = users;
@@ -15,7 +17,7 @@ describe('Test endpoint DELETE /tasks/:id', () => {
   });
 
   it('Successfully delete a task', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .delete(`${ENDPOINTS.TASK}/${id}`)
       .auth(email, password);
 
@@ -25,7 +27,7 @@ describe('Test endpoint DELETE /tasks/:id', () => {
   });
 
   it('Fail to delete a task without token', async () => {
-    const response = await request(BASE_URL).delete(`${ENDPOINTS.TASK}/${id}`);
+    const response = await request(app).delete(`${ENDPOINTS.TASK}/${id}`);
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.have.property('message');
@@ -33,7 +35,7 @@ describe('Test endpoint DELETE /tasks/:id', () => {
   });
 
   it('Fail to delete a task with invalid token', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .delete(`${ENDPOINTS.TASK}/${id}`)
       .auth(email, 'invalid');
 
@@ -43,7 +45,7 @@ describe('Test endpoint DELETE /tasks/:id', () => {
   });
 
   it('Fail to delete a task with invalid id', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .delete(`${ENDPOINTS.TASK}/invalid`)
       .auth(email, password);
 

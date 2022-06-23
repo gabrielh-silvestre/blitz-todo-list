@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newUser } from '../../utils/mocks';
 
 describe('Test endpoint POST /users', () => {
@@ -12,7 +14,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Successfully create a new user', async () => {
-    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
+    const response = await request(app).post(ENDPOINTS.USER).send(newUser);
 
     expect(response.status).to.be.equal(201);
     expect(response.body).to.have.property('token');
@@ -25,7 +27,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user without email', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -38,7 +40,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with invalid email', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -51,7 +53,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user without password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -64,7 +66,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with short password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -79,7 +81,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with long password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -94,7 +96,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user without name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -107,7 +109,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with short name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -122,7 +124,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with long name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -137,12 +139,15 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with duplicate email', async () => {
-    await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
+    request(app)
+      .post(ENDPOINTS.USER)
+      .send(newUser)
+      .then(async () => {
+        const response = await request(app).post(ENDPOINTS.USER).send(newUser);
 
-    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
-
-    expect(response.status).to.be.equal(409);
-    expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Email already registered');
+        expect(response.status).to.be.equal(409);
+        expect(response.body).to.have.property('message');
+        expect(response.body.message).to.be.equal('Email already registered');
+      });
   });
 });
