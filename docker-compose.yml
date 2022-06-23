@@ -27,7 +27,7 @@ services:
     volumes:
       - ./back-end:/app/backend
     ports:
-      - ${BACK_PORT}:3001
+      - 3001:${BACK_PORT}
     tty: true
     stdin_open: true
     depends_on:
@@ -40,7 +40,7 @@ services:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
       - DB_PORT=${DB_PORT}
-      - DATABASE_URL=mysql://root:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      - DATABASE_URL=mysql://root:${DB_PASSWORD}@mysql:${DB_PORT}/${DB_NAME}
     healthcheck:
       test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
       timeout: 15s
