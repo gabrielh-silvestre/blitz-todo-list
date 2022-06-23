@@ -1,3 +1,2 @@
 timeout: 30000
-parallel: true
-jobs: 3
+jobs: 4

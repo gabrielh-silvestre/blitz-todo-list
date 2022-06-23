@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newTask, tasks, users } from '../../utils/mocks';
 
 const [{ email, password }] = users;
@@ -15,7 +17,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Successfully create a new main task', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send(newTask);
@@ -40,7 +42,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Successfully create a new sub task', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -68,7 +70,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task without token', async () => {
-    const response = await request(BASE_URL).post(ENDPOINTS.TASK).send(newTask);
+    const response = await request(app).post(ENDPOINTS.TASK).send(newTask);
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.have.property('message');
@@ -76,7 +78,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task with invalid token', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, 'invalid')
       .send(newTask);
@@ -87,7 +89,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task without title', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -101,7 +103,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task with short title', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -111,11 +113,13 @@ describe('Test endpoint POST /tasks', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Title must be at least 5 characters');
+    expect(response.body.message).to.be.equal(
+      'Title must be at least 5 characters'
+    );
   });
 
   it('Fail to create a new task with long title', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -125,11 +129,13 @@ describe('Test endpoint POST /tasks', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Title must be less than 12 characters');
+    expect(response.body.message).to.be.equal(
+      'Title must be less than 12 characters'
+    );
   });
 
   it('Fail to create a new task with empty description', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -143,7 +149,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task with long description', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -159,7 +165,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task with status', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({
@@ -173,12 +179,9 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new task with duplicate title', async () => {
-    await request(BASE_URL)
-      .post(ENDPOINTS.TASK)
-      .auth(email, password)
-      .send(newTask);
+    await request(app).post(ENDPOINTS.TASK).auth(email, password).send(newTask);
 
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send(newTask);
@@ -189,7 +192,7 @@ describe('Test endpoint POST /tasks', () => {
   });
 
   it('Fail to create a new sub task with invalid main task', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.TASK)
       .auth(email, password)
       .send({

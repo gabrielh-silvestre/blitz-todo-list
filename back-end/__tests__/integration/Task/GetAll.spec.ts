@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { users } from '../../utils/mocks';
 
 const [{ email, password }] = users;
@@ -14,7 +16,7 @@ describe('Test endpoint GET /tasks', () => {
   });
 
   it('Successfully get all tasks', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .get(ENDPOINTS.TASK)
       .auth(email, password);
 
@@ -36,7 +38,7 @@ describe('Test endpoint GET /tasks', () => {
   });
 
   it('Fail to get all tasks without token', async () => {
-    const response = await request(BASE_URL).get(ENDPOINTS.TASK);
+    const response = await request(app).get(ENDPOINTS.TASK);
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.have.property('message');
@@ -44,7 +46,7 @@ describe('Test endpoint GET /tasks', () => {
   });
 
   it('Fail to get all tasks with invalid token', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .get(ENDPOINTS.TASK)
       .auth(email, 'invalid');
 

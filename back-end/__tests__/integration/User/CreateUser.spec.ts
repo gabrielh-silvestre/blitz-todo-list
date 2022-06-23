@@ -3,7 +3,9 @@ import shelljs from 'shelljs';
 
 import { expect } from 'chai';
 
-import { BASE_URL, DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
+import { app } from '../../../src/app';
+
+import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newUser } from '../../utils/mocks';
 
 describe('Test endpoint POST /users', () => {
@@ -12,7 +14,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Successfully create a new user', async () => {
-    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
+    const response = await request(app).post(ENDPOINTS.USER).send(newUser);
 
     expect(response.status).to.be.equal(201);
     expect(response.body).to.have.property('token');
@@ -25,7 +27,7 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user without email', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -34,11 +36,11 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(400);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Email is required');
+    expect(response.body.message).to.be.equal('"email" is required');
   });
 
   it('Fail to create a new user with invalid email', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -47,11 +49,11 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Email is invalid');
+    expect(response.body.message).to.be.equal('"email" must be a valid email');
   });
 
   it('Fail to create a new user without password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -60,24 +62,26 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(400);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Password is required');
+    expect(response.body.message).to.be.equal('"password" is required');
   });
 
   it('Fail to create a new user with short password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
         password: 'short',
       });
 
-    expect(response.status).to.be.equal(400);
+    expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Password is too short');
+    expect(response.body.message).to.be.equal(
+      '"password" length must be at least 8 characters long'
+    );
   });
 
   it('Fail to create a new user with long password', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -86,11 +90,13 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Password is too long');
+    expect(response.body.message).to.be.equal(
+      '"password" length must be less than or equal to 16 characters long'
+    );
   });
 
   it('Fail to create a new user without name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -99,11 +105,11 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(400);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Name is required');
+    expect(response.body.message).to.be.equal('"name" is required');
   });
 
   it('Fail to create a new user with short name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -112,11 +118,13 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Name is too short');
+    expect(response.body.message).to.be.equal(
+      '"name" length must be at least 3 characters long'
+    );
   });
 
   it('Fail to create a new user with long name', async () => {
-    const response = await request(BASE_URL)
+    const response = await request(app)
       .post(ENDPOINTS.USER)
       .send({
         ...newUser,
@@ -125,16 +133,21 @@ describe('Test endpoint POST /users', () => {
 
     expect(response.status).to.be.equal(422);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Name is too long');
+    expect(response.body.message).to.be.equal(
+      '"name" length must be less than or equal to 16 characters long'
+    );
   });
 
   it('Fail to create a new user with duplicate email', async () => {
-    await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
+    request(app)
+      .post(ENDPOINTS.USER)
+      .send(newUser)
+      .then(async () => {
+        const response = await request(app).post(ENDPOINTS.USER).send(newUser);
 
-    const response = await request(BASE_URL).post(ENDPOINTS.USER).send(newUser);
-
-    expect(response.status).to.be.equal(409);
-    expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Email already exists');
+        expect(response.status).to.be.equal(409);
+        expect(response.body).to.have.property('message');
+        expect(response.body.message).to.be.equal('Email already registered');
+      });
   });
 });
