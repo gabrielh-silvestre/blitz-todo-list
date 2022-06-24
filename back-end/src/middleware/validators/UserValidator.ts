@@ -1,45 +1,34 @@
-import type { Handler } from 'express';
-
-import Joi from 'joi';
-import { BadRequestError, UnprocessableEntityError } from 'restify-errors';
+import { celebrate, Joi, Segments } from 'celebrate';
 
 class UserValidator {
-  private static readonly CREATE_USER_VALIDATOR = Joi.object({
-    name: Joi.string().min(3).max(16).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).max(16).required(),
-  });
+  private static readonly CREATE_USER_VALIDATOR = celebrate(
+    {
+      [Segments.BODY]: Joi.object({
+        name: Joi.string().min(3).max(16).required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(8).max(16).required(),
+      }),
+    },
+    { abortEarly: true }
+  );
 
-  private static readonly LOGIN_USER_VALIDATOR = Joi.object({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
-  });
+  private static readonly LOGIN_USER_VALIDATOR = celebrate(
+    {
+      [Segments.BODY]: Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required(),
+      }),
+    },
+    { abortEarly: true }
+  );
 
-  private static readonly normalizeJoiError = (errorMessage: string): never => {
-    throw errorMessage.includes('required')
-      ? new BadRequestError(errorMessage)
-      : new UnprocessableEntityError(errorMessage);
-  };
+  static get validateCreateUser() {
+    return UserValidator.CREATE_USER_VALIDATOR;
+  }
 
-  public static validateCreateUser: Handler = (req, _res, next) => {
-    const { error } = UserValidator.CREATE_USER_VALIDATOR.validate(req.body);
-
-    if (error) {
-      UserValidator.normalizeJoiError(error.details[0].message);
-    }
-
-    next();
-  };
-
-  public static validateLoginUser: Handler = (req, _res, next) => {
-    const { error } = UserValidator.LOGIN_USER_VALIDATOR.validate(req.body);
-
-    if (error) {
-      UserValidator.normalizeJoiError(error.details[0].message);
-    }
-
-    next();
-  };
+  static get validateLoginUser() {
+    return UserValidator.LOGIN_USER_VALIDATOR;
+  }
 }
 
 export { UserValidator };

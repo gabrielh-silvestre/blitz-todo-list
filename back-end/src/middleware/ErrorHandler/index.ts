@@ -1,10 +1,37 @@
 import type { ErrorRequestHandler } from 'express';
-import { HttpError, InternalServerError } from 'restify-errors';
+
+import {
+  BadRequestError,
+  HttpError,
+  InternalServerError,
+  UnprocessableEntityError,
+} from 'restify-errors';
+import { CelebrateError } from 'celebrate';
 
 class ErrorHandler {
-  private static readonly normalize = (err: HttpError | Error): HttpError => {
+  private static readonly normalizeJoiError = (
+    errorMessage: string
+  ): HttpError => {
+    return errorMessage.includes('required')
+      ? new BadRequestError(errorMessage)
+      : new UnprocessableEntityError(errorMessage);
+  };
+
+  private static readonly normalize = (
+    err: HttpError | CelebrateError | Error
+  ): HttpError => {
     if (err instanceof HttpError) {
       return err;
+    }
+
+    if (err instanceof CelebrateError) {
+      let error: HttpError = new BadRequestError(err, 'Validation Error');
+
+      err.details.forEach((detail) => {
+        error = ErrorHandler.normalizeJoiError(detail.message);
+      });
+
+      return error;
     }
 
     console.error(err);
