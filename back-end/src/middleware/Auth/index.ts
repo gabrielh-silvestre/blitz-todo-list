@@ -15,7 +15,7 @@ class AuthHandler {
 
     const userId = this.tokenService.verifyToken(token);
 
-    if (!userId) throw new UnauthorizedError('Unauthorized');
+    if (!userId) throw new UnauthorizedError('Expired or invalid token');
 
     req.userId = userId;
 
