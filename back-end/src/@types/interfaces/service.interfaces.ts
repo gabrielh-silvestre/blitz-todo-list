@@ -2,7 +2,7 @@ import type { UserIdentifier } from '../types';
 
 interface ITokenService {
   generateToken(id: UserIdentifier): string;
-  verifyToken(token: string): UserIdentifier;
+  verifyToken(token: string): UserIdentifier | null;
 }
 
 interface IEncryptService {

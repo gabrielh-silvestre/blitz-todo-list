@@ -11,10 +11,14 @@ class TokenService {
     return token;
   }
 
-  static verifyToken(token: string): UserIdentifier {
-    const payload = verify(token, secret, jwtOptions) as TokenPayload;
-
-    return payload.data;
+  static verifyToken(bearerToken: string): UserIdentifier | null {
+    try {
+      const token = bearerToken.split(' ')[1];
+      const payload = verify(token, secret, jwtOptions) as TokenPayload;
+      return payload.data;
+    } catch (err) {
+      return null;
+    }
   }
 }
 
