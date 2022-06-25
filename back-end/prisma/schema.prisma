@@ -51,4 +51,5 @@ model Task {
 
   @@map("Tasks")
   @@unique([title, userId])
+  @@unique([id, userId])
 }
