@@ -1,5 +1,6 @@
-import type { Request, Response } from 'express';
-import { SignUpUseCase } from './SignUpUseCase';
+import type { Request, Response } from "express";
+
+import { SignUpUseCase } from "./SignUpUseCase";
 
 class SignUpController {
   constructor(private readonly signUpUseCase: SignUpUseCase) {}

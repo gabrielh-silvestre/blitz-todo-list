@@ -3,12 +3,15 @@ import type {
   TaskReturn,
   TaskUpdateAttributes,
   UserIdentifier,
-} from '../types';
+} from "../types";
 
 interface ITaskRepository {
   findAll(userId: UserIdentifier): Promise<TaskReturn[]>;
   findById(userId: UserIdentifier, taskId: string): Promise<TaskReturn | null>;
-  findByTitle(userId: UserIdentifier, title: string): Promise<TaskReturn | null>;
+  findByTitle(
+    userId: UserIdentifier,
+    title: string
+  ): Promise<TaskReturn | null>;
   findByMainTaskId(
     userId: UserIdentifier,
     mainTaskId: string

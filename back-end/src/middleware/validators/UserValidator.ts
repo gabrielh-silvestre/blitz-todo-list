@@ -1,4 +1,4 @@
-import { celebrate, Joi, Segments } from 'celebrate';
+import { celebrate, Joi, Segments } from "celebrate";
 
 class UserValidator {
   private static readonly CREATE_USER_VALIDATOR = celebrate(

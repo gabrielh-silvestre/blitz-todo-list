@@ -1,5 +1,6 @@
-import { Request, Response } from 'express';
-import { FindAllUseCase } from './FindAllUseCase';
+import { Request, Response } from "express";
+
+import { FindAllUseCase } from "./FindAllUseCase";
 
 class FindAllController {
   constructor(private readonly findAllUseCase: FindAllUseCase) {}

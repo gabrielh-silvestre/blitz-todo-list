@@ -1,4 +1,4 @@
-import type { UserIdentifier } from '../types';
+import type { UserIdentifier } from "../types";
 
 interface ITokenService {
   generateToken(id: UserIdentifier): string;

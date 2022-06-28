@@ -1,6 +1,6 @@
-import { TaskRepository } from '../../repository';
-import { FindAllUseCase } from './FindAllUseCase';
-import { FindAllController } from './FindAllController';
+import { TaskRepository } from "../../repository";
+import { FindAllController } from "./FindAllController";
+import { FindAllUseCase } from "./FindAllUseCase";
 
 const taskRepository = new TaskRepository();
 const findAllUseCase = new FindAllUseCase(taskRepository);

@@ -1,4 +1,4 @@
-import type { UserIdentifier } from './user.types';
+import type { UserIdentifier } from "./user.types";
 
 type TokenPayload = { data: UserIdentifier };
 

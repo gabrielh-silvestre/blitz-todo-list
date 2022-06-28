@@ -1,14 +1,12 @@
-import type { ITaskRepository } from '../../../@types/interfaces';
-
+import type { ITaskRepository } from "../../../@types/interfaces";
 import type {
   TaskCreateAttributes,
   TaskReturn,
   TaskReturnOptions,
   TaskUpdateAttributes,
   UserIdentifier,
-} from '../../../@types/types';
-
-import { prisma } from '../../prisma';
+} from "../../../@types/types";
+import { prisma } from "../../prisma";
 
 class TaskRepository implements ITaskRepository {
   private static readonly taskOptions: TaskReturnOptions = {
