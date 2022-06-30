@@ -71,7 +71,7 @@ describe("Test UpdateUseCase", () => {
     });
   });
 
-  describe.only("Fail case", () => {
+  describe("Fail case", () => {
     before(() => {
       findByTitleStub = Sinon.stub(TaskRepository.prototype, "findByTitle");
       findByTitleStub.onFirstCall().resolves({ ...MOCK_ATT_TASK_RETURN, id: "2" });
