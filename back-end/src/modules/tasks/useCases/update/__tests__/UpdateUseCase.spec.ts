@@ -13,7 +13,7 @@ const MOCK_ATT_TASK: TaskUpdateAttributes = {
   id: "1",
   title: "Task 1",
   description: "Task 1 description",
-  mainTaskId: "1",
+  mainTaskId: null,
   status: "DONE",
 };
 
