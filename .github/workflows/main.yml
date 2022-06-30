@@ -1,0 +1,51 @@
+on: [pull_request]
+
+jobs:
+  Automatic-Tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.21
+        env:
+          MYSQL_USER: root
+          MYSQL_PASSWORD: 123456
+          MYSQL_ROOT_PASSWORD: 123546
+          MYSQL_DATABASE: Action_Blitz_Todo_List
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd mysqladmin
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Verify git repository
+        uses: actions/checkout@v2
+
+      - name: Install node on version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:backend
+        env:
+          DATABASE_URL: 'mysql://root:123456@mysql:$3306/Action_Blitz_Todo_List'
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Generate Mocha report
+        run: npm run test:backend:result
+        env:
+          DATABASE_URL: 'mysql://root:123456@mysql:$3306/Action_Blitz_Todo_List'
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: MOCHA Tests
+          path: test-results.json
+          reporter: mocha-json
