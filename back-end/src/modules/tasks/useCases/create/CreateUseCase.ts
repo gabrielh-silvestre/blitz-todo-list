@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { ConflictError } from "restify-errors";
+import { ConflictError, NotFoundError } from "restify-errors";
 
 import type { ITaskRepository } from "../../../../@types/interfaces";
 import type {
@@ -11,6 +11,19 @@ import type {
 
 class CreateUseCase {
   constructor(private readonly taskRepository: ITaskRepository) {}
+
+  private async mainTaskDoesNotExist(
+    userId: UserIdentifier,
+    mainTaskId: string | null
+  ): Promise<void | never> {
+    if (!mainTaskId) return;
+
+    const task = await this.taskRepository.findById(userId, mainTaskId);
+
+    if (!task) {
+      throw new NotFoundError("Main task does not exist");
+    }
+  }
 
   private async titleAlreadyExists(
     userId: UserIdentifier,
@@ -28,6 +41,7 @@ class CreateUseCase {
     attributes: TaskCreateAttributes
   ): Promise<SuccessCase<TaskReturn> | never> {
     await this.titleAlreadyExists(userId, attributes.title);
+    await this.mainTaskDoesNotExist(userId, attributes.mainTaskId);
 
     const task = await this.taskRepository.create(userId, attributes);
 

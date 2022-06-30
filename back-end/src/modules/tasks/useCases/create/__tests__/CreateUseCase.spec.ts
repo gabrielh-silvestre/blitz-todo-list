@@ -26,8 +26,9 @@ const MOCK_NEW_TASK_RETURN: TaskReturn = {
 
 const createUseCase = new CreateUseCase(new TaskRepository());
 
-describe("Test CreateUseCase", () => {
+describe.only("Test CreateUseCase", () => {
   let findByTitleStub: Sinon.SinonStub;
+  let findByIdStub: Sinon.SinonStub;
   let createStub: Sinon.SinonStub;
 
   describe("Success case", () => {
@@ -35,12 +36,16 @@ describe("Test CreateUseCase", () => {
       findByTitleStub = Sinon.stub(TaskRepository.prototype, "findByTitle");
       findByTitleStub.resolves(null);
 
+      findByIdStub = Sinon.stub(TaskRepository.prototype, "findById");
+      findByIdStub.resolves(MOCK_NEW_TASK);
+
       createStub = Sinon.stub(TaskRepository.prototype, "create");
       createStub.resolves(MOCK_NEW_TASK_RETURN);
     });
 
     after(() => {
       findByTitleStub.restore();
+      findByIdStub.restore();
       createStub.restore();
     });
 
@@ -68,7 +73,11 @@ describe("Test CreateUseCase", () => {
   describe("Fail case", () => {
     before(() => {
       findByTitleStub = Sinon.stub(TaskRepository.prototype, "findByTitle");
-      findByTitleStub.resolves(MOCK_NEW_TASK_RETURN);
+      findByTitleStub.onFirstCall().resolves(MOCK_NEW_TASK_RETURN);
+      findByTitleStub.onSecondCall().resolves(null);
+
+      findByIdStub = Sinon.stub(TaskRepository.prototype, "findById");
+      findByIdStub.resolves(null);
 
       createStub = Sinon.stub(TaskRepository.prototype, "create");
       createStub.rejects(new Error("Should not reach this point"));
@@ -76,16 +85,27 @@ describe("Test CreateUseCase", () => {
 
     after(() => {
       findByTitleStub.restore();
+      findByIdStub.restore();
       createStub.restore();
     });
 
-    it("should throw an error with message and status code", async () => {
+    it("when task title already exists, should throw an error with message and status code", async () => {
       try {
         await createUseCase.execute({ id: "1" }, MOCK_NEW_TASK);
       } catch (error) {
         expect(error).to.be.an("object");
         expect(error).to.have.property("statusCode", 409);
         expect(error).to.have.property("message", "Task already exists");
+      }
+    });
+
+    it("when task main task does not exist, should throw an error with message and status code", async () => {
+      try {
+        await createUseCase.execute({ id: "1" }, MOCK_NEW_TASK);
+      } catch (error) {
+        expect(error).to.be.an("object");
+        expect(error).to.have.property("statusCode", 404);
+        expect(error).to.have.property("message", "Main task does not exist");
       }
     });
   });
