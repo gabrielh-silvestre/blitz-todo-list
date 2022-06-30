@@ -12,10 +12,11 @@ class TaskValidator {
   private static readonly UPDATE_TASK_VALIDATOR = celebrate({
     [Segments.BODY]: Joi.object({
       title: Joi.string().min(5).max(12).required(),
-      description: Joi.string().allow(null).empty().max(80),
+      description: Joi.string().allow(null).empty().max(80).required(),
       status: Joi.string()
         .empty()
-        .valid("CREATED", "IN_PROGRESS", "DONE", "DELETED"),
+        .valid("CREATED", "IN_PROGRESS", "DONE", "DELETED")
+        .required(),
       mainTaskId: Joi.string().empty(),
     }),
     [Segments.PARAMS]: Joi.object({
