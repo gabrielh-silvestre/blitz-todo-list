@@ -1,17 +1,17 @@
-import { NotFoundError } from 'restify-errors';
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
+import { NotFoundError } from "restify-errors";
 
 import type {
   IEncryptService,
   ITokenService,
   IUserRepository,
-} from '../../../../@types/interfaces';
+} from "../../../../@types/interfaces";
 import type {
   SuccessCase,
   SignReturn,
   UserAuthAttributes,
   UserAttributes,
-} from '../../../../@types/types';
+} from "../../../../@types/types";
 
 class SignInUseCase {
   constructor(
@@ -26,7 +26,7 @@ class SignInUseCase {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundError('Invalid credentials');
+      throw new NotFoundError("Invalid credentials");
     }
 
     return user;
@@ -42,7 +42,7 @@ class SignInUseCase {
     );
 
     if (!isValid) {
-      throw new NotFoundError('Invalid credentials');
+      throw new NotFoundError("Invalid credentials");
     }
   }
 

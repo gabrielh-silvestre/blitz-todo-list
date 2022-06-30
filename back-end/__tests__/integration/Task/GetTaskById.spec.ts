@@ -16,25 +16,32 @@ describe('Test endpoint GET /tasks/:id', () => {
   });
 
   it('Successfully get task by id', async () => {
-    const response = await request(app)
-      .get(`${ENDPOINTS.TASK}/${FIRST_MAIN_TASK_ID}`)
-      .auth(email, password);
+    await request(app)
+      .post(ENDPOINTS.LOGIN)
+      .send({ email, password })
+      .then(async (res) => {
+        const { token } = res.body;
 
-    expect(response.status).to.be.equal(200);
+        const response = await request(app)
+          .get(`${ENDPOINTS.TASK}/${FIRST_MAIN_TASK_ID}`)
+          .set('Authorization', token);
 
-    expect(response.body).to.be.an('object');
-    expect(response.body).to.have.property('id');
-    expect(response.body).to.have.property('title');
-    expect(response.body).to.have.property('description');
-    expect(response.body).to.have.property('status');
-    expect(response.body).to.have.property('subTasks');
-    expect(response.body).to.have.property('createdAt');
-    expect(response.body).to.have.property('lastUpdate');
-    expect(response.body).to.have.property('completedAt');
+        expect(response.status).to.be.equal(200);
 
-    expect(response.body).not.to.have.property('userId');
+        expect(response.body).to.be.an('object');
+        expect(response.body).to.have.property('id');
+        expect(response.body).to.have.property('title');
+        expect(response.body).to.have.property('description');
+        expect(response.body).to.have.property('status');
+        expect(response.body).to.have.property('subTasks');
+        expect(response.body).to.have.property('createdAt');
+        expect(response.body).to.have.property('lastUpdate');
+        expect(response.body).to.have.property('completedAt');
 
-    expect(response.body.subTasks).to.be.an('array');
+        expect(response.body).not.to.have.property('userId');
+
+        expect(response.body.subTasks).to.be.an('array');
+      });
   });
 
   it('Fail to get task by id without token', async () => {
@@ -50,20 +57,27 @@ describe('Test endpoint GET /tasks/:id', () => {
   it('Fail to get task by id with invalid token', async () => {
     const response = await request(app)
       .get(`${ENDPOINTS.TASK}/${FIRST_MAIN_TASK_ID}`)
-      .auth(email, 'invalid');
+      .set('Authorization', 'invalid token');
 
     expect(response.status).to.be.equal(401);
     expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Invalid token');
+    expect(response.body.message).to.be.equal('Expired or invalid token');
   });
 
   it('Fail to get task by id with invalid id', async () => {
-    const response = await request(app)
-      .get(`${ENDPOINTS.TASK}/2`)
-      .auth(email, password);
+    await request(app)
+      .post(ENDPOINTS.LOGIN)
+      .send({ email, password })
+      .then(async (res) => {
+        const { token } = res.body;
 
-    expect(response.status).to.be.equal(404);
-    expect(response.body).to.have.property('message');
-    expect(response.body.message).to.be.equal('Task not found');
+        const response = await request(app)
+          .get(`${ENDPOINTS.TASK}/2`)
+          .set('Authorization', token);
+
+        expect(response.status).to.be.equal(404);
+        expect(response.body).to.have.property('message');
+        expect(response.body.message).to.be.equal('Task not found');
+      });
   });
 });

@@ -1,4 +1,4 @@
-import { UserAttributes, UserCreateAttributes } from '../types';
+import { UserAttributes, UserCreateAttributes } from "../types";
 
 interface IUserRepository {
   create(newUser: UserCreateAttributes): Promise<UserAttributes>;

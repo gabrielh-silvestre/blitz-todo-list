@@ -1,12 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import { hash } from 'bcryptjs';
+import { PrismaClient } from "@prisma/client";
+import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const firstUserId = 'cl4q28dge00013a82yht5klxn';
-  const secondUserId = 'cl4q28mt300033a82oq6te0u8';
-  const thirdUserId = 'cl4q28r7000053a82kkqujqsp';
+  const firstUserId = "cl4q28dge00013a82yht5klxn";
+  const secondUserId = "cl4q28mt300033a82oq6te0u8";
+  const thirdUserId = "cl4q28r7000053a82kkqujqsp";
 
   await prisma.task.deleteMany({});
   await prisma.user.deleteMany({});
@@ -15,74 +15,74 @@ async function main() {
     data: [
       {
         id: firstUserId,
-        name: 'John',
-        email: 'john@email.com',
-        password: await hash('123456', 8),
+        name: "John",
+        email: "john@email.com",
+        password: await hash("123456", 8),
       },
       {
         id: secondUserId,
-        name: 'Jane',
-        email: 'jane@email.com',
-        password: await hash('123456', 8),
+        name: "Jane",
+        email: "jane@email.com",
+        password: await hash("123456", 8),
       },
       {
         id: thirdUserId,
-        name: 'Jack',
-        email: 'jack@email.com',
-        password: await hash('123456', 8),
+        name: "Jack",
+        email: "jack@email.com",
+        password: await hash("123456", 8),
       },
     ],
   });
 
-  const firstMainTaskId = 'cl4q28wy400073a82ix9h5bmy';
-  const secondMainTaskId = 'cl4q299ve00093a82o9pco4fy';
+  const firstMainTaskId = "cl4q28wy400073a82ix9h5bmy";
+  const secondMainTaskId = "cl4q299ve00093a82o9pco4fy";
 
   await prisma.task.createMany({
     data: [
       {
         id: firstMainTaskId,
-        title: 'Go to the store',
+        title: "Go to the store",
         description: null,
         userId: firstUserId,
       },
       {
-        title: 'Buy milk',
-        description: 'Chocolate milk',
+        title: "Buy milk",
+        description: "Chocolate milk",
         userId: firstUserId,
         mainTaskId: firstMainTaskId,
       },
       {
-        title: 'Buy eggs',
-        description: 'Eggs for breakfast',
+        title: "Buy eggs",
+        description: "Eggs for breakfast",
         userId: firstUserId,
         mainTaskId: firstMainTaskId,
       },
       {
-        title: 'Buy bread',
-        description: 'Integral bread',
+        title: "Buy bread",
+        description: "Integral bread",
         userId: firstUserId,
         mainTaskId: firstMainTaskId,
       },
       {
         id: secondMainTaskId,
-        title: 'Study',
-        description: 'Learn Elixir',
+        title: "Study",
+        description: "Learn Elixir",
         userId: secondUserId,
       },
       {
-        title: 'Read documentation',
+        title: "Read documentation",
         description: null,
         userId: secondUserId,
         mainTaskId: secondMainTaskId,
       },
       {
-        title: 'Practice in CodeWars',
-        description: 'Solve 3 problems',
+        title: "Practice in CodeWars",
+        description: "Solve 3 problems",
         userId: secondUserId,
         mainTaskId: secondMainTaskId,
       },
       {
-        title: 'Rest for the exam',
+        title: "Rest for the exam",
         description: null,
         userId: thirdUserId,
       },

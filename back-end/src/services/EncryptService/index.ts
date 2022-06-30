@@ -1,4 +1,4 @@
-import { compare, hash } from 'bcryptjs';
+import { compare, hash } from "bcryptjs";
 
 class EncryptService {
   static async encrypt(password: string): Promise<string> {
