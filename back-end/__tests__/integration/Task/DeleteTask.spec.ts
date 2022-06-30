@@ -11,7 +11,7 @@ import { tasks, users } from "../../utils/mocks";
 const [{ email, password }] = users;
 const [{ id }] = tasks;
 
-describe.only("Test endpoint DELETE /tasks/:id", () => {
+describe("Test endpoint DELETE /tasks/:id", () => {
   beforeEach(() => {
     shelljs.exec(DATABASE_RESET, { silent: true });
   });
