@@ -32,7 +32,7 @@ const SUCCESS_RESPONSE: SuccessCase<TaskReturn> = {
   payload: MOCK_NEW_TASK_RETURN,
 };
 
-describe.only('Test CreateController', () => {
+describe('Test CreateController', () => {
   let useCaseStub: Sinon.SinonStub;
   let spiedStatus: Sinon.SinonSpy;
   let spiedJson: Sinon.SinonSpy;

@@ -26,7 +26,7 @@ const MOCK_NEW_TASK_RETURN: TaskReturn = {
 
 const createUseCase = new CreateUseCase(new TaskRepository());
 
-describe.only("Test CreateUseCase", () => {
+describe("Test CreateUseCase", () => {
   let findByTitleStub: Sinon.SinonStub;
   let findByIdStub: Sinon.SinonStub;
   let createStub: Sinon.SinonStub;
