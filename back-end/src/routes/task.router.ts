@@ -5,6 +5,7 @@ import { TaskValidator } from "../middleware/validators/TaskValidator";
 import { createController } from "../modules/tasks/useCases/create";
 import { findAllController } from "../modules/tasks/useCases/findAll";
 import { findByTitleController } from "../modules/tasks/useCases/findById";
+import { updateController } from "../modules/tasks/useCases/update";
 
 const TaskRouter = Router();
 
@@ -20,6 +21,13 @@ TaskRouter.post(
   AuthMiddleware.handle,
   TaskValidator.validateCreateTask,
   createController.handle
+);
+
+TaskRouter.put(
+  "/:id",
+  AuthMiddleware.handle,
+  TaskValidator.validateUpdateTask,
+  updateController.handle
 );
 
 export { TaskRouter };

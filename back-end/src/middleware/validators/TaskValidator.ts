@@ -9,8 +9,26 @@ class TaskValidator {
     }),
   });
 
+  private static readonly UPDATE_TASK_VALIDATOR = celebrate({
+    [Segments.BODY]: Joi.object({
+      title: Joi.string().min(5).max(12).required(),
+      description: Joi.string().allow(null).empty().max(80),
+      status: Joi.string()
+        .empty()
+        .valid("CREATED", "IN_PROGRESS", "DONE", "DELETED"),
+      mainTaskId: Joi.string().empty(),
+    }),
+    [Segments.PARAMS]: Joi.object({
+      id: Joi.string().required(),
+    }),
+  });
+
   static get validateCreateTask() {
     return TaskValidator.CREATE_TASK_VALIDATOR;
+  }
+
+  static get validateUpdateTask() {
+    return TaskValidator.UPDATE_TASK_VALIDATOR;
   }
 }
 
