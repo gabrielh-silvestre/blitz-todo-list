@@ -53,9 +53,9 @@ class UpdateUseCase {
     userId: UserIdentifier,
     attributes: TaskUpdateAttributes
   ): Promise<SuccessCase<TaskReturn> | never> {
+    await this.titleAlreadyExists(userId, attributes.id, attributes.title);
     await this.taskExists(userId, attributes.id);
     await this.mainTaskExists(userId, attributes.mainTaskId);
-    await this.titleAlreadyExists(userId, attributes.id, attributes.title);
 
     const task = await this.taskRepository.update(userId, attributes);
 

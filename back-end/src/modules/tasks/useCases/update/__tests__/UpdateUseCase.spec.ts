@@ -71,14 +71,15 @@ describe("Test UpdateUseCase", () => {
     });
   });
 
-  describe("Fail case", () => {
+  describe.only("Fail case", () => {
     before(() => {
       findByTitleStub = Sinon.stub(TaskRepository.prototype, "findByTitle");
-      findByTitleStub.resolves({ ...MOCK_ATT_TASK_RETURN, id: "2" });
+      findByTitleStub.onFirstCall().resolves({ ...MOCK_ATT_TASK_RETURN, id: "2" });
+      findByTitleStub.resolves(MOCK_ATT_TASK_RETURN);
 
       findByIdStub = Sinon.stub(TaskRepository.prototype, "findById");
-      findByIdStub.resolves(MOCK_ATT_TASK_RETURN);
       findByIdStub.onFirstCall().resolves(null);
+      findByIdStub.onSecondCall().resolves(MOCK_ATT_TASK_RETURN);
       findByIdStub.onThirdCall().resolves(null);
 
       updateStub = Sinon.stub(TaskRepository.prototype, "update");
@@ -89,6 +90,16 @@ describe("Test UpdateUseCase", () => {
       findByTitleStub.restore();
       findByIdStub.restore();
       updateStub.restore();
+    });
+
+    it("when task title already exists, should throw an error with message and status code", async () => {
+      try {
+        await updateUseCase.execute({ id: "1" }, MOCK_ATT_TASK);
+      } catch (error) {
+        expect(error).to.be.an("object");
+        expect(error).to.have.property("statusCode", 409);
+        expect(error).to.have.property("message", "Task already exists");
+      }
     });
 
     it("when task does not exists, should throw an error with message and status code", async () => {
@@ -103,21 +114,11 @@ describe("Test UpdateUseCase", () => {
 
     it("when main task does not exist, should throw an error with message and status code", async () => {
       try {
-        await updateUseCase.execute({ id: "1" }, MOCK_ATT_TASK);
+        await updateUseCase.execute({ id: "1" }, { ...MOCK_ATT_TASK, mainTaskId: "1" });
       } catch (error) {
         expect(error).to.be.an("object");
         expect(error).to.have.property("statusCode", 404);
         expect(error).to.have.property("message", "Main task does not exist");
-      }
-    });
-
-    it("when task title already exists, should throw an error with message and status code", async () => {
-      try {
-        await updateUseCase.execute({ id: "1" }, MOCK_ATT_TASK);
-      } catch (error) {
-        expect(error).to.be.an("object");
-        expect(error).to.have.property("statusCode", 409);
-        expect(error).to.have.property("message", "Task already exists");
       }
     });
   });
