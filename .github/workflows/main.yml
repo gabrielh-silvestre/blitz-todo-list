@@ -3,21 +3,6 @@ on: [pull_request]
 jobs:
   Backend-Tests:
     runs-on: ubuntu-latest
-    # services:
-    #   mysql:
-    #     image: mysql:8.0.21
-    #     env:
-    #       MYSQL_USER: root
-    #       MYSQL_PASSWORD: 123456
-    #       MYSQL_ROOT_PASSWORD: 123546
-    #       MYSQL_DATABASE: Action_Blitz_Todo_List
-    #     ports:
-    #       - 3306:3306
-    #     options: >-
-    #       --health-cmd mysqladmin ping
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 10
     steps:
       - name: Verify git repository
         uses: actions/checkout@v2
@@ -36,12 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: cd back-end && npm ci
-
-      - name: Run tests
-        run: npm run test:backend
-        env:
-          DATABASE_URL: 'mysql://root:123456@localhost:3306/Action_Blitz_Todo_List'
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Generate Mocha report
         run: npm run test:backend:result
