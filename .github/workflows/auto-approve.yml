@@ -1,5 +1,9 @@
 name: Auto approve
-on: pull_request_target
+
+on: 
+  check_run:
+    types:
+      - completed
 
 jobs:
   build:
