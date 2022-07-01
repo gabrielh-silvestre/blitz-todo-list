@@ -9,7 +9,7 @@ import { DATABASE_RESET, ENDPOINTS } from '../../utils/constants';
 import { newUser } from '../../utils/mocks';
 
 describe('Test endpoint POST /users', () => {
-  beforeEach(() => {
+  before(() => {
     shelljs.exec(DATABASE_RESET, { silent: true });
   });
 
@@ -139,15 +139,20 @@ describe('Test endpoint POST /users', () => {
   });
 
   it('Fail to create a new user with duplicate email', async () => {
-    request(app)
-      .post(ENDPOINTS.USER)
-      .send(newUser)
-      .then(async () => {
-        const response = await request(app).post(ENDPOINTS.USER).send(newUser);
+    // request(app)
+    //   .post(ENDPOINTS.USER)
+    //   .send(newUser)
+    //   .then(async () => {
+    //     const response = await request(app).post(ENDPOINTS.USER).send(newUser);
 
-        expect(response.status).to.be.equal(409);
-        expect(response.body).to.have.property('message');
-        expect(response.body.message).to.be.equal('Email already registered');
-      });
+    //     expect(response.status).to.be.equal(409);
+    //     expect(response.body).to.have.property('message');
+    //     expect(response.body.message).to.be.equal('Email already registered');
+    //   });
+    const response = await request(app).post(ENDPOINTS.USER).send(newUser);
+
+    expect(response.status).to.be.equal(409);
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Email already registered');
   });
 });
