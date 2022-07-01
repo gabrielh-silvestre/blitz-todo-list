@@ -35,3 +35,14 @@ jobs:
           name: MOCHA Tests
           path: back-end/test-results.json
           reporter: mocha-json
+
+  Auto-Approve:
+    needs:
+      - Backend-Tests
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: hmarr/auto-approve-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
