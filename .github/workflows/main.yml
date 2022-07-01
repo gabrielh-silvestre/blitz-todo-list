@@ -3,21 +3,21 @@ on: [pull_request]
 jobs:
   Automatic-Tests:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0.21
-        env:
-          MYSQL_USER: root
-          MYSQL_PASSWORD: 123456
-          MYSQL_ROOT_PASSWORD: 123546
-          MYSQL_DATABASE: Action_Blitz_Todo_List
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd mysqladmin ping
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
+    # services:
+    #   mysql:
+    #     image: mysql:8.0.21
+    #     env:
+    #       MYSQL_USER: root
+    #       MYSQL_PASSWORD: 123456
+    #       MYSQL_ROOT_PASSWORD: 123546
+    #       MYSQL_DATABASE: Action_Blitz_Todo_List
+    #     ports:
+    #       - 3306:3306
+    #     options: >-
+    #       --health-cmd mysqladmin ping
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 10
     steps:
       - name: Verify git repository
         uses: actions/checkout@v2
@@ -26,6 +26,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
+
+      - name: Start MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0.21'
+          mysql root password: '123456'
+          mysql database: 'Action_Blitz_Todo_List'
 
       - name: Install dependencies
         run: npm ci
