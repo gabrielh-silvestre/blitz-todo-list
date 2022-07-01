@@ -1,0 +1,37 @@
+on: [pull_request]
+
+jobs:
+  Backend-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify git repository
+        uses: actions/checkout@v2
+
+      - name: Install node on version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Start MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0.21'
+          mysql root password: '123456'
+          mysql database: 'Action_Blitz_Todo_List'
+
+      - name: Install dependencies
+        run: cd back-end && npm ci
+
+      - name: Generate Mocha report
+        run: npm run test:backend:result
+        env:
+          DATABASE_URL: 'mysql://root:123456@localhost:3306/Action_Blitz_Todo_List'
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: MOCHA Tests
+          path: back-end/test-results.json
+          reporter: mocha-json

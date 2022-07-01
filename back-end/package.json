@@ -13,7 +13,8 @@
     "test": "mocha -r ts-node/register/transpile-only **/__tests__/**/*.spec.ts",
     "test:unit": "mocha -r ts-node/register/transpile-only src/**/__tests__/**/*.spec.ts",
     "test:integration": "mocha -r ts-node/register/transpile-only __tests__/integration/**/*.spec.ts",
-    "test:coverage": "nyc npm test"
+    "test:coverage": "nyc npm test",
+    "test:result": "npm run pretest && mocha -R json -O output=test-results.json -r ts-node/register/transpile-only **/__tests__/**/*.spec.ts"
   },
   "keywords": [],
   "author": "",
