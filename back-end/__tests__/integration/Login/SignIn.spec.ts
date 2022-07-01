@@ -11,7 +11,7 @@ import { users } from '../../utils/mocks';
 const [{ email, password }] = users;
 
 describe('Test endpoint POST /login', () => {
-  beforeEach(() => {
+  before(() => {
     shelljs.exec(DATABASE_RESET, { silent: true });
   });
 
