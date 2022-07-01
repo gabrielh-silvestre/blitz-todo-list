@@ -40,13 +40,13 @@ jobs:
       - name: Run tests
         run: npm run test:backend
         env:
-          DATABASE_URL: 'mysql://root:123456@localhost:$3306/Action_Blitz_Todo_List'
+          DATABASE_URL: 'mysql://root:123456@localhost:3306/Action_Blitz_Todo_List'
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Generate Mocha report
         run: npm run test:backend:result
         env:
-          DATABASE_URL: 'mysql://root:123456@localhost:$3306/Action_Blitz_Todo_List'
+          DATABASE_URL: 'mysql://root:123456@localhost:3306/Action_Blitz_Todo_List'
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Test Report
