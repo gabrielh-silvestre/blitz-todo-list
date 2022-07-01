@@ -36,7 +36,7 @@ jobs:
           path: back-end/test-results.json
           reporter: mocha-json
 
-  Auto-Approve:
+  Auto-Merge:
     needs:
       - Backend-Tests
     runs-on: ubuntu-latest
@@ -46,3 +46,10 @@ jobs:
     - uses: hmarr/auto-approve-action@v2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: reitermarkus/automerge@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        merge-method: rebase
+        required-labels: automerge
+
