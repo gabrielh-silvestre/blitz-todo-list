@@ -1,7 +1,7 @@
-on: [pull_request, push]
+on: [pull_request]
 
 jobs:
-  Automatic-Tests:
+  Backend-Tests:
     runs-on: ubuntu-latest
     # services:
     #   mysql:
@@ -35,7 +35,7 @@ jobs:
           mysql database: 'Action_Blitz_Todo_List'
 
       - name: Install dependencies
-        run: npm ci
+        run: cd back-end && npm ci
 
       - name: Run tests
         run: npm run test:backend
