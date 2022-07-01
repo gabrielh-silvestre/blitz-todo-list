@@ -1,16 +1,25 @@
-name: Auto approve
-
 on: 
-  check_run:
+  pull_request_target:
     types:
-      - completed
+      - auto_merge_enabled
+      - opened
+      - labeled
 
 jobs:
-  build:
+  Auto-Merge:
+    needs:
+      - Backend-Tests
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
     - uses: hmarr/auto-approve-action@v2
       with:
-        github-token: ${{ secrets.TOKEN_SECRET }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: reitermarkus/automerge@v2
+      
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        merge-method: rebase
+        required-labels: automerge

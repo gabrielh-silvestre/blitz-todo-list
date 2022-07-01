@@ -36,20 +36,21 @@ jobs:
           path: back-end/test-results.json
           reporter: mocha-json
 
-  Auto-Merge:
-    needs:
-      - Backend-Tests
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-    - uses: hmarr/auto-approve-action@v2
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+  # Auto-Merge:
+  #   needs:
+  #     - Backend-Tests
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     pull-requests: write
+  #   steps:
+  #   - uses: hmarr/auto-approve-action@v2
+  #     with:
+  #       github-token: ${{ secrets.GITHUB_TOKEN }}
     
-    - uses: reitermarkus/automerge@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        merge-method: rebase
-        required-labels: automerge
+  #   - uses: reitermarkus/automerge@v2
+      
+  #     with:
+  #       token: ${{ secrets.GITHUB_TOKEN }}
+  #       merge-method: rebase
+  #       required-labels: automerge
 
