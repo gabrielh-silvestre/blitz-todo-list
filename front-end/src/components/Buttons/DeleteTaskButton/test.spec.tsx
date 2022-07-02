@@ -7,13 +7,13 @@ describe("Test Component: DeleteTaskButton", () => {
     render(<DeleteTaskButton />);
 
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
+    expect(button).toBeInTheDocument();
   });
 
   it("02. should have a icon", () => {
     render(<DeleteTaskButton />);
 
     const icon = screen.getByTestId("delete-task-icon");
-    expect(icon).toBeDefined();
+    expect(icon).toBeInTheDocument();
   });
 });

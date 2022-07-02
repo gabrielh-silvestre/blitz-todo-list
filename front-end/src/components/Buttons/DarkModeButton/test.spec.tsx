@@ -7,13 +7,13 @@ describe("Test Component: DarkModeButton", () => {
     render(<DarkModeButton />);
 
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
+    expect(button).toBeInTheDocument();
   });
 
   it("02. should have a icon", () => {
     render(<DarkModeButton />);
 
     const icon = screen.getByTestId("light-mode-icon");
-    expect(icon).toBeDefined();
+    expect(icon).toBeInTheDocument();
   });
 });

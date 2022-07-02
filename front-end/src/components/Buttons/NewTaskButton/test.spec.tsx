@@ -7,13 +7,13 @@ describe("Test Component: NewTaskButton", () => {
     render(<NewTaskButton />);
 
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
+    expect(button).toBeInTheDocument();
   });
 
   it("02. should have a icon", () => {
     render(<NewTaskButton />);
 
     const icon = screen.getByTestId("add-task-icon");
-    expect(icon).toBeDefined();
+    expect(icon).toBeInTheDocument();
   });
 });
