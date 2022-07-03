@@ -18,17 +18,17 @@ describe("Test Component: DarkModeButton", () => {
     expect(icon).toBeInTheDocument();
   });
 
-  it("03. should have with dark mode icon", () => {
+  it("03. should have with dark mode icon", async () => {
     render(<DarkModeButton />);
 
     const button = screen.getByRole("button");
-    userEvent.click(button);
+    await userEvent.click(button);
 
     const icon = screen.getByTestId("dark-mode-icon");
     expect(icon).toBeInTheDocument();
   });
 
-  it("04. should toggle with light mode and dark mode", () => {
+  it("04. should toggle with light mode and dark mode", async () => {
     render(<DarkModeButton />);
 
     const button = screen.getByRole("button");
@@ -36,7 +36,7 @@ describe("Test Component: DarkModeButton", () => {
     const lightIcon = screen.getByTestId("light-mode-icon");
     expect(lightIcon).toBeVisible();
 
-    userEvent.click(button);
+    await userEvent.click(button);
 
     const darkIcon = screen.getByTestId("dark-mode-icon");
     expect(darkIcon).toBeVisible();
