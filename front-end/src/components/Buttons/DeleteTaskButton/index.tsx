@@ -1,6 +1,6 @@
 import { HiOutlineTrash } from "react-icons/hi";
 
-import type { TaskIdentifier } from "../../../@types/types";
+import type { TaskIdentifier } from "./propTypes";
 
 export function DeleteTaskButton({ id }: TaskIdentifier) {
   return (

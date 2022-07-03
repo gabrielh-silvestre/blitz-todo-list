@@ -1,8 +1,6 @@
 import { HiCheck } from "react-icons/hi";
 
-type CompleteTaskButtonProps = {
-  completed?: boolean;
-};
+import type { CompleteTaskButtonProps } from "./propTypes";
 
 export function CompleteTaskButton({
   completed = false,

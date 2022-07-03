@@ -1,6 +1,6 @@
 import { HiOutlinePlus } from "react-icons/hi";
 
-import type { NewTaskProps } from "../../../@types/types";
+import type { NewTaskProps } from "./propTypes";
 
 export function NewTaskButton({
   title,

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import type { NewTaskProps } from "../../../@types/types";
+import type { NewTaskProps } from "./propTypes";
 
 import { NewTaskButton } from ".";
 
