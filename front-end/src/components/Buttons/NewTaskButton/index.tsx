@@ -4,8 +4,8 @@ import type { NewTaskProps } from "./propTypes";
 
 export function NewTaskButton({
   title,
-  description,
-  mainTaskId,
+  description = null,
+  mainTaskId = null,
 }: NewTaskProps) {
   return (
     <button>
