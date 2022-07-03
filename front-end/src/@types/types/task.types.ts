@@ -3,3 +3,7 @@ export type NewTaskProps = {
   description: string;
   mainTaskId?: string;
 };
+
+export type TaskIdentifier = {
+  id: string;
+};
