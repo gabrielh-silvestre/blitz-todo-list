@@ -41,6 +41,9 @@ export const DescriptionSection = tw.section`
 `;
 
 export const TaskDescription = tw.p`
+  text-lg
+  text-secondary-text
+
   break-words
 `;
 

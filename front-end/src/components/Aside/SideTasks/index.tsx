@@ -18,7 +18,7 @@ export function SideTasks() {
   return (
     <>
       <ContentContainer>
-        <FilterSection>
+        {/* <FilterSection>
           <FilterLabel htmlFor="started">
             <FilterInput id="started" type="checkbox" />
             Started
@@ -31,7 +31,7 @@ export function SideTasks() {
             <FilterInput id="deleted" type="checkbox" />
             Deleted
           </FilterLabel>
-        </FilterSection>
+        </FilterSection> */}
 
         <ListSection>
           <ul>

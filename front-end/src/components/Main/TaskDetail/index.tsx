@@ -23,7 +23,7 @@ export function TaskDetail() {
     <>
       <ContentContainer>
         <PrimarySection>
-          <span>last update: </span>
+          {/* <span>last update: </span> */}
 
           <InfoContainer>
             <TaskTitle>{selectedTask?.title}</TaskTitle>
