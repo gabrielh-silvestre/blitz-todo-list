@@ -1,21 +1,23 @@
 import { CompleteTaskButton } from "../../Buttons/CompleteTaskButton";
 import { DeleteTaskButton } from "../../Buttons/DeleteTaskButton";
 
+import type { TaskItemProps } from "./propTypes";
+
 import { ButtonContainer, ContentContainer, TaskTitle } from "./styles";
 
-export function TaskItem() {
+export function TaskItem({ id, status, title }: TaskItemProps) {
   return (
     <ContentContainer>
-      <span>Status</span>
+      <span>{status}</span>
 
-      <TaskTitle>Título</TaskTitle>
+      <TaskTitle>{title}</TaskTitle>
 
       <ButtonContainer>
         <CompleteTaskButton />
       </ButtonContainer>
 
       <ButtonContainer>
-        <DeleteTaskButton id="1" />
+        <DeleteTaskButton id={id} />
       </ButtonContainer>
     </ContentContainer>
   );

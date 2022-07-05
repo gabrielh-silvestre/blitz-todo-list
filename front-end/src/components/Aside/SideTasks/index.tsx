@@ -1,8 +1,7 @@
-import type { TaskListProps } from "./propTypes";
-
-import { CompleteTaskButton } from "../../Buttons/CompleteTaskButton";
-import { DeleteTaskButton } from "../../Buttons/DeleteTaskButton";
+import { TaskItem } from "../../Items/TaskItem";
 import { NewTaskButton } from "../../Buttons/NewTaskButton";
+
+import { useGetAllTasks } from "../../../stores/task/useCases/GetAllTasks";
 
 import {
   ContentContainer,
@@ -12,9 +11,10 @@ import {
   ListSection,
   NewButtonSection,
 } from "./styles";
-import { TaskItem } from "../../Items/TaskItem";
 
-export function SideTasks({ tasks }: TaskListProps) {
+export function SideTasks() {
+  const { data } = useGetAllTasks();
+
   return (
     <>
       <ContentContainer>
@@ -35,12 +35,9 @@ export function SideTasks({ tasks }: TaskListProps) {
 
         <ListSection>
           <ul>
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
+            {data?.map((task) => (
+              <TaskItem key={task.id} {...task} />
+            ))}
           </ul>
         </ListSection>
 

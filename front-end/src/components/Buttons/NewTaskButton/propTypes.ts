@@ -1,5 +1,3 @@
-export type NewTaskProps = {
-  title: string;
-  description?: string | null;
-  mainTaskId?: string | null;
-};
+import type { Task } from "../../../types";
+
+export type NewTaskProps = Pick<Task, "title" | "description" | "mainTaskId">;
