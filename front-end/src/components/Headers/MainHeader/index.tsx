@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Modal from "react-modal";
 import { HiUserCircle } from "react-icons/hi";
 
@@ -6,12 +7,8 @@ import { SignInForm } from "../../Forms/SignInForm";
 import { SignUpForm } from "../../Forms/SignUpForm";
 
 import { ContentContainer, IconsContainer, Title } from "./styles";
-import { useEffect, useState } from "react";
-import { userStore } from "../../../stores/user";
 
 export function MainHeader() {
-  const { userToken } = userStore((state) => state);
-
   const [hasAccount, setHasAccount] = useState(true);
   const [isSignInFormOpen, setIsSignInFormOpen] = useState(false);
 
@@ -22,10 +19,6 @@ export function MainHeader() {
   const handleCloseSignInForm = () => {
     setIsSignInFormOpen(false);
   };
-
-  useEffect(() => {
-    console.log({ userToken });
-  }, [isSignInFormOpen]);
 
   return (
     <>
