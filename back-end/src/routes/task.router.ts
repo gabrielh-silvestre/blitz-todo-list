@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { AuthMiddleware } from "../middleware/Auth";
 import { TaskValidator } from "../middleware/validators/TaskValidator";
+import { completeController } from "../modules/tasks/useCases/complete";
 import { createController } from "../modules/tasks/useCases/create";
 import { deleteController } from "../modules/tasks/useCases/delete";
 import { findAllController } from "../modules/tasks/useCases/findAll";
@@ -30,6 +31,8 @@ TaskRouter.put(
   TaskValidator.validateUpdateTask,
   updateController.handle
 );
+
+TaskRouter.patch("/:id", AuthMiddleware.handle, completeController.handle);
 
 TaskRouter.delete("/:id", AuthMiddleware.handle, deleteController.handle);
 
