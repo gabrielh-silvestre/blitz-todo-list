@@ -7,10 +7,14 @@ import { SignInForm } from "../../Forms/SignInForm";
 import { SignUpForm } from "../../Forms/SignUpForm";
 
 import { ContentContainer, IconsContainer, Title } from "./styles";
+import { userStore } from "../../../stores/user";
+import { LogOutButton } from "../../Buttons/LogOutButton";
 
 export function MainHeader() {
   const [hasAccount, setHasAccount] = useState(true);
   const [isSignInFormOpen, setIsSignInFormOpen] = useState(false);
+
+  const { userToken } = userStore((state) => state);
 
   const handleOpenSignInForm = () => {
     setIsSignInFormOpen(true);
@@ -27,9 +31,13 @@ export function MainHeader() {
 
         <IconsContainer>
           <DarkModeButton />
-          <button onClick={handleOpenSignInForm}>
-            <HiUserCircle />
-          </button>
+          {userToken ? (
+            <LogOutButton />
+          ) : (
+            <button onClick={handleOpenSignInForm}>
+              <HiUserCircle />
+            </button>
+          )}
         </IconsContainer>
       </ContentContainer>
 
