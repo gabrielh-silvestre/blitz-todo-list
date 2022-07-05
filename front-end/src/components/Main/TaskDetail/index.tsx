@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-
-import type { Task } from "../../../types";
-
-import { NewTaskButton } from "../../Buttons/NewTaskButton";
+import { ToggleTaskEditButton } from "../../Buttons/ToggleTaskEditButton";
+// import { NewTaskButton } from "../../Buttons/NewTaskButton";
 import { TaskItem } from "../../Items/TaskItem";
 
-import { useGetAllTasks } from "../../../stores/task/useCases/GetAllTasks";
+import { taskStore } from "../../../stores/task";
 
 import {
   ContentContainer,
   DescriptionSection,
   InfoContainer,
-  NewButtonSection,
+  // NewButtonSection,
   PrimarySection,
   SubTaskList,
   SubTasksSection,
@@ -20,14 +17,7 @@ import {
 } from "./styles";
 
 export function TaskDetail() {
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const { data } = useGetAllTasks();
-
-  useEffect(() => {
-    if (data) {
-      setSelectedTask(data[0]);
-    }
-  }, [data]);
+  const { selectedTask } = taskStore((state) => state);
 
   return (
     <>
@@ -37,7 +27,11 @@ export function TaskDetail() {
 
           <InfoContainer>
             <TaskTitle>{selectedTask?.title}</TaskTitle>
-            <span>{selectedTask?.status}</span>
+
+            <div className="flex items-center">
+              <span>{selectedTask?.status}</span>
+              <ToggleTaskEditButton className="ml-8" />
+            </div>
           </InfoContainer>
         </PrimarySection>
 
@@ -54,9 +48,9 @@ export function TaskDetail() {
             ))}
           </SubTaskList>
 
-          <NewButtonSection>
-            <NewTaskButton title="Task 1" />
-          </NewButtonSection>
+          {/* <NewButtonSection>
+            <NewTaskButton />
+          </NewButtonSection> */}
         </SubTasksSection>
       </ContentContainer>
     </>
