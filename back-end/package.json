@@ -7,6 +7,8 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
+    "build": "tsc && prisma migrate deploy",
+    "start": "node dist/src/server.js",
     "predev": "prisma migrate dev",
     "dev": "nodemon src/server.ts",
     "pretest": "prisma migrate dev",
