@@ -2,25 +2,29 @@ import { HiOutlinePlus } from "react-icons/hi";
 
 import type { NewTaskProps } from "./propTypes";
 
-import { useCreateNewTask } from "../../../stores/task/useCases/CreateNewTask";
+import { taskStore } from "../../../stores/task";
 
 export function NewTaskButton({
-  title,
-  description = null,
-  mainTaskId = null,
+  isUpdate = false,
+  disabled = false,
 }: NewTaskProps) {
-  const { mutate } = useCreateNewTask({
-    title,
-    description,
-    mainTaskId,
-  });
+  const { setEditMode, setSelectedTask } = taskStore((state) => state);
 
-  const handleCreateNewTask = () => {
-    mutate();
-  };
+  if (isUpdate) {
+    return (
+      <button disabled={disabled} type="submit">
+        <HiOutlinePlus data-testid="add-task-icon" />
+      </button>
+    );
+  }
 
   return (
-    <button onClick={handleCreateNewTask}>
+    <button
+      onClick={() => {
+        setEditMode(true);
+        setSelectedTask(null);
+      }}
+    >
       <HiOutlinePlus data-testid="add-task-icon" />
     </button>
   );
