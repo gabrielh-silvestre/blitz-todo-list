@@ -8,6 +8,7 @@ import type { ApiErrorResponse, Task } from "../../../types";
 import { userStore } from "../../user";
 import { api } from "../../../services/Axios";
 import { queryClient } from "../../../services/QueryClient";
+import { taskStore } from "..";
 
 const deleteTask = async (
   userToken: string | null,
@@ -29,6 +30,11 @@ export const useDeleteTask = (id: string) => {
     onSuccess: () => {
       toast.success("Task deleted");
       queryClient.invalidateQueries("tasks");
+
+      taskStore.setState(({ selectedTask }) => ({
+        selectedTask: selectedTask?.id === id ? null : selectedTask,
+        editMode: selectedTask?.id === id,
+      }));
     },
     onError: (err: AxiosError<ApiErrorResponse>) => {
       if (err.response) {

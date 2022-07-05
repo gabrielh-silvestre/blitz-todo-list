@@ -42,7 +42,7 @@ export function SideTasks() {
         </ListSection>
 
         <NewButtonSection>
-          <NewTaskButton title="Task 1" />
+          <NewTaskButton />
         </NewButtonSection>
       </ContentContainer>
     </>

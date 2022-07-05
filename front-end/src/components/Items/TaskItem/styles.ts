@@ -11,6 +11,8 @@ export const TaskTitle = tw.h4`
 
   font-semibold
   text-lg
+
+  cursor-pointer
 `;
 
 export const ButtonContainer = tw.div`
