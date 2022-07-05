@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev:front": "cd front-end && npm run dev",
+    "dev:back": "cd back-end && npm run dev",
+    "dev": "npm run dev:back && npm run dev:front",
     "test:backend": "cd back-end && npm test",
     "test:backend:result": "cd back-end && npm run test:result",
     "install:front": "cd front-end && npm install",
