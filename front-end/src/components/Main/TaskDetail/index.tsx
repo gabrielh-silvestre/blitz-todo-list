@@ -1,5 +1,11 @@
+import { useEffect, useState } from "react";
+
+import type { Task } from "../../../types";
+
 import { NewTaskButton } from "../../Buttons/NewTaskButton";
 import { TaskItem } from "../../Items/TaskItem";
+
+import { useGetAllTasks } from "../../../stores/task/useCases/GetAllTasks";
 
 import {
   ContentContainer,
@@ -14,30 +20,38 @@ import {
 } from "./styles";
 
 export function TaskDetail() {
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { data } = useGetAllTasks();
+
+  useEffect(() => {
+    if (data) {
+      setSelectedTask(data[0]);
+    }
+  }, [data]);
+
   return (
     <>
       <ContentContainer>
         <PrimarySection>
-          <span>last update: 03/07/2022</span>
+          <span>last update: </span>
 
           <InfoContainer>
-            <TaskTitle>Título</TaskTitle>
-            <span>status</span>
+            <TaskTitle>{selectedTask?.title}</TaskTitle>
+            <span>{selectedTask?.status}</span>
           </InfoContainer>
         </PrimarySection>
 
         <DescriptionSection>
-          <TaskDescription>{"Descrição ".repeat(80)}</TaskDescription>
+          {selectedTask?.description && (
+            <TaskDescription>{selectedTask?.description}</TaskDescription>
+          )}
         </DescriptionSection>
 
         <SubTasksSection>
-          {/* Subtasks */}
           <SubTaskList>
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
-            <TaskItem />
+            {selectedTask?.subTasks?.map((subTask) => (
+              <TaskItem key={subTask.id} {...subTask} />
+            ))}
           </SubTaskList>
 
           <NewButtonSection>
