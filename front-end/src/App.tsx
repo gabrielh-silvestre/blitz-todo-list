@@ -4,6 +4,9 @@ import { Toaster } from "react-hot-toast";
 import { SideTasks } from "./components/Aside/SideTasks";
 import { MainHeader } from "./components/Headers/MainHeader";
 import { TaskDetail } from "./components/Main/TaskDetail";
+import { NewTaskForm } from "./components/Forms/NewTaskForm";
+
+import { taskStore } from "./stores/task";
 
 import {
   AsideContainer,
@@ -18,6 +21,8 @@ import "./App.css";
 Modal.setAppElement("#root");
 
 function App() {
+  const { editMode } = taskStore((state) => state);
+
   return (
     <Container>
       <HeaderContainer>
@@ -30,7 +35,7 @@ function App() {
         </AsideContainer>
 
         <MainContainer>
-          <TaskDetail />
+          {editMode ? <NewTaskForm /> : <TaskDetail />}
         </MainContainer>
       </ContentContainer>
       <Toaster />
