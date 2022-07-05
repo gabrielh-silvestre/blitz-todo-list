@@ -1,3 +1,5 @@
+import { TaskStatus } from "@prisma/client";
+
 import type { ITaskRepository } from "../../../@types/interfaces";
 import type {
   TaskCreateAttributes,
@@ -115,6 +117,20 @@ class TaskRepository implements ITaskRepository {
     const updatedTask = await prisma.task.update({
       where: { id_userId: { id: attributes.id, userId } },
       data: { ...attributes },
+      select: { ...TaskRepository.taskOptions },
+    });
+
+    return updatedTask;
+  }
+
+  async changeStatus(
+    { id: userId }: UserIdentifier,
+    taskId: string,
+    newStatus: TaskStatus
+  ): Promise<TaskReturn> {
+    const updatedTask = await prisma.task.update({
+      where: { id_userId: { id: taskId, userId } },
+      data: { status: newStatus },
       select: { ...TaskRepository.taskOptions },
     });
 

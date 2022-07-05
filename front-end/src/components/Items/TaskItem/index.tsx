@@ -21,7 +21,7 @@ export function TaskItem({ id, status, title }: TaskItemProps) {
       <TaskTitle onClick={handleSelectTask}>{title}</TaskTitle>
 
       <ButtonContainer>
-        <CompleteTaskButton />
+        <CompleteTaskButton taskId={id} completed={status === "DONE"} />
       </ButtonContainer>
 
       <ButtonContainer>

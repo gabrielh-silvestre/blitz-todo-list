@@ -1,3 +1,5 @@
+import { TaskStatus } from "@prisma/client";
+
 import type {
   TaskCreateAttributes,
   TaskReturn,
@@ -25,6 +27,12 @@ interface ITaskRepository {
   update(
     userId: UserIdentifier,
     attributes: TaskUpdateAttributes
+  ): Promise<TaskReturn>;
+
+  changeStatus(
+    userId: UserIdentifier,
+    taskId: string,
+    newStatus: TaskStatus
   ): Promise<TaskReturn>;
 
   delete(userId: UserIdentifier, taskId: string): Promise<void>;

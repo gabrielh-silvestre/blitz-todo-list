@@ -11,6 +11,7 @@ export const TaskTitle = tw.h4`
 
   font-semibold
   text-lg
+  truncate
 
   cursor-pointer
 `;

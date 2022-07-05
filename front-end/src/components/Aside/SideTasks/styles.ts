@@ -1,12 +1,15 @@
 import tw from "tailwind-styled-components";
 
 export const ContentContainer = tw.div`
+  w-60
   h-full
 
   relative
 
   px-8
   py-2
+
+  overflow-hidden
 `;
 
 export const FilterSection = tw.section`
