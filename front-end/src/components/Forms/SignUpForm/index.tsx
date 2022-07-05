@@ -18,7 +18,7 @@ import {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function SignUpForm({ alreadyHaveAccount, closeForm }: SignUpFormProps) {
-  const { mutateAsync } = useSignUpUser();
+  const { mutate } = useSignUpUser();
   const {
     register,
     handleSubmit,
@@ -32,7 +32,7 @@ export function SignUpForm({ alreadyHaveAccount, closeForm }: SignUpFormProps) {
     e?.preventDefault();
 
     closeForm();
-    mutateAsync(data);
+    mutate(data);
   };
 
   return (
