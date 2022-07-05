@@ -2,7 +2,7 @@ version: '3.9'
 services:
   frontend:
     image: node:16-alpine
-    command: npm run dev --host
+    command: npm run dev -- --host
     restart: on-failure
     working_dir: /app/frontend
     volumes:
