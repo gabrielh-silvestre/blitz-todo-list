@@ -1,12 +1,13 @@
 import type { AxiosError } from "axios";
 
-import { useQuery } from "react-query";
+import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 
 import type { ApiErrorResponse, Task } from "../../../types";
 
-import { api } from "../../../services/Axios";
 import { userStore } from "../../user";
+import { taskStore } from "..";
+import { api } from "../../../services/Axios";
 
 const getTaskById = async (
   userToken: string | null,
@@ -24,9 +25,10 @@ const getTaskById = async (
 export const useGetTaskById = (id: string) => {
   const token = userStore.getState().userToken;
 
-  return useQuery(`task:${id}`, () => getTaskById(token, id), {
-    enabled: !!token,
-    initialData: null,
+  return useMutation(`task:${id}`, (id: string) => getTaskById(token, id), {
+    onSuccess: (data) => {
+      taskStore.setState({ selectedTask: data, editMode: false });
+    },
     onError: (err: AxiosError<ApiErrorResponse>) => {
       if (err.response) {
         toast.error(err.response.data.message);
