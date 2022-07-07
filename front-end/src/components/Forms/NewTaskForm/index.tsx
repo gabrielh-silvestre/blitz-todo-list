@@ -1,14 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import type { UpdateTaskDto } from "../../../types";
+import type { CreateTaskDto, UpdateTaskDto } from "../../../types";
 import type { FormInput } from "./propTypes";
 
 import { ToggleTaskEditButton } from "../../Buttons/ToggleTaskEditButton";
 import { NewTaskButton } from "../../Buttons/NewTaskButton";
 
-import { taskStore } from "../../../stores/task";
-import { useCreateNewTask } from "../../../stores/task/useCases/CreateNewTask";
-import { useUpdateTask } from "../../../stores/task/useCases/UpdateTask";
+import { useTasks } from "../../../hooks/useTasks";
 
 import {
   FormContainer,
@@ -22,9 +20,7 @@ import {
 } from "./styles";
 
 export function NewTaskForm() {
-  const { selectedTask } = taskStore((state) => state);
-  const { mutate: mutateUpdate } = useUpdateTask();
-  const { mutate: mutateCreate } = useCreateNewTask();
+  const { selectedTask, updateTask, createTask } = useTasks();
 
   const {
     register,
@@ -39,30 +35,27 @@ export function NewTaskForm() {
     mode: "onChange",
   });
 
+  const update = (data: UpdateTaskDto) => {
+    const { description } = data;
+
+    updateTask({
+      ...data,
+      description: description === "" ? null : description,
+    });
+  };
+
+  const create = ({ title, description }: CreateTaskDto) => {
+    createTask({
+      title,
+      description: description === "" ? null : description,
+    });
+  };
+
   const onSubmit: SubmitHandler<FormInput> = (data, e) => {
     e?.preventDefault();
 
-    console.log({ data, selectedTask });
-
-    if (selectedTask) {
-      const taskToUpdate = data as UpdateTaskDto;
-      const { description } = taskToUpdate;
-
-      mutateUpdate({
-        taskId: selectedTask.id,
-        task: {
-          ...taskToUpdate,
-          description: description === "" ? null : description,
-        },
-      });
-    } else {
-      const { title, description } = data;
-
-      mutateCreate({
-        title,
-        description: description === "" ? null : description,
-      });
-    }
+    const isToUpdate = !!selectedTask;
+    isToUpdate ? update(data as UpdateTaskDto) : create(data);
   };
 
   return (

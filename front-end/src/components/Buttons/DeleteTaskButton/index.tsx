@@ -2,13 +2,16 @@ import { HiOutlineTrash } from "react-icons/hi";
 
 import type { TaskIdentifier } from "./propTypes";
 
-import { useDeleteTask } from "../../../stores/task/useCases/DeleteTask";
+import { useTasks } from "../../../hooks/useTasks";
 
 export function DeleteTaskButton({ id }: TaskIdentifier) {
-  const { mutate } = useDeleteTask(id);
+  const { selectedTask, setSelectedTask, deleteTask } = useTasks();
 
-  const handleDelete = async () => {
-    mutate();
+  const handleDelete = () => {
+    if (selectedTask?.id === id) {
+      setSelectedTask(null);
+    }
+    deleteTask(id);
   };
 
   return (

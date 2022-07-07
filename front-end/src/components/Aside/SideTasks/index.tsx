@@ -1,7 +1,7 @@
 import { TaskItem } from "../../Items/TaskItem";
 import { NewTaskButton } from "../../Buttons/NewTaskButton";
 
-import { useGetAllTasks } from "../../../stores/task/useCases/GetAllTasks";
+import { useTasks } from "../../../hooks/useTasks";
 
 import {
   ContentContainer,
@@ -13,7 +13,9 @@ import {
 } from "./styles";
 
 export function SideTasks() {
-  const { data } = useGetAllTasks();
+  const { tasks, getAllTasks } = useTasks();
+
+  getAllTasks();
 
   return (
     <>
@@ -35,7 +37,7 @@ export function SideTasks() {
 
         <ListSection>
           <ul>
-            {data?.map((task) => (
+            {tasks.map((task) => (
               <TaskItem key={task.id} {...task} />
             ))}
           </ul>

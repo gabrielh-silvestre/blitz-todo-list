@@ -2,7 +2,7 @@ import { ToggleTaskEditButton } from "../../Buttons/ToggleTaskEditButton";
 // import { NewTaskButton } from "../../Buttons/NewTaskButton";
 import { TaskItem } from "../../Items/TaskItem";
 
-import { taskStore } from "../../../stores/task";
+import { useTasks } from "../../../hooks/useTasks";
 
 import {
   ContentContainer,
@@ -17,7 +17,7 @@ import {
 } from "./styles";
 
 export function TaskDetail() {
-  const { selectedTask } = taskStore((state) => state);
+  const { selectedTask } = useTasks();
 
   return (
     <>

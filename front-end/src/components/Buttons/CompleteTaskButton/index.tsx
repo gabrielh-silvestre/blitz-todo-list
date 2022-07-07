@@ -2,20 +2,16 @@ import { HiCheck } from "react-icons/hi";
 
 import type { CompleteTaskButtonProps } from "./propTypes";
 
-import { useCompleteTask } from "../../../stores/task/useCases/CompleteTask";
+import { useTasks } from "../../../hooks/useTasks";
 
 export function CompleteTaskButton({
   taskId,
   completed = false,
 }: CompleteTaskButtonProps) {
-  const { mutate } = useCompleteTask();
-
-  const handleCompleteTask = () => {
-    mutate(taskId);
-  };
+  const { completeTask } = useTasks();
 
   return (
-    <button hidden={completed} onClick={handleCompleteTask}>
+    <button hidden={completed} onClick={() => completeTask(taskId)}>
       <HiCheck data-testid="complete-task-icon" />
     </button>
   );

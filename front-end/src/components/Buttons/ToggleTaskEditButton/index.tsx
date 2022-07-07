@@ -2,13 +2,13 @@ import { HiOutlinePencilAlt, HiOutlineXCircle } from "react-icons/hi";
 
 import type { ToggleTaskEditButtonProps } from "./propTypes";
 
-import { taskStore } from "../../../stores/task";
+import { useTasks } from "../../../hooks/useTasks";
 
 export function ToggleTaskEditButton({
   isEditing = false,
   className,
 }: ToggleTaskEditButtonProps) {
-  const { setEditMode } = taskStore((state) => state);
+  const { setEditMode } = useTasks();
 
   return (
     <button
