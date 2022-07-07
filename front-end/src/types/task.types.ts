@@ -12,7 +12,6 @@ export type Task = {
 
 export type CreateTaskDto = Pick<Task, "title" | "description" | "mainTaskId">;
 
-export type UpdateTaskDto = Pick<
-  Task,
-  "id" | "title" | "description" | "status"
+export type UpdateTaskDto = Partial<
+  Omit<Task, "id" | "createdAt" | "completedAt" | "lastUpdate" | "subTasks">
 >;
