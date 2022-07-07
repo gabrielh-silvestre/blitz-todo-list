@@ -32,7 +32,7 @@ export function useUsers() {
 
   const logout = useCallback(() => {
     setUserToken(null);
-    onQuerySuccess("Goodbye! See you soon!");
+    onQuerySuccess("Goodbye, see you soon!");
   }, []);
 
   return {
