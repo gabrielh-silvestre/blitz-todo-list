@@ -1,13 +1,16 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 
 import type { CreateTaskDto, UpdateTaskDto } from "../types";
+
+import { useUsers } from "./useUsers";
 
 import { Tasks } from "../services/Tasks";
 import { taskStore } from "../stores/task";
 import { onQueryError, onQuerySuccess } from "../utils/Query";
 
 export function useTasks() {
+  const { userToken } = useUsers();
   const {
     tasks,
     setTasks,
@@ -21,6 +24,7 @@ export function useTasks() {
 
   const getAllTasks = useCallback(async () => {
     return useQuery("tasks", () => Tasks.getAllTasks(), {
+      enabled: !!userToken,
       onSuccess: (data) => setTasks(data),
       onError: onQueryError,
     });
@@ -35,7 +39,11 @@ export function useTasks() {
 
   const createTask = useCallback(() => {
     return useMutation((task: CreateTaskDto) => Tasks.createTask(task), {
-      onSuccess: () => onQuerySuccess("Task created"),
+      onSuccess: (data) => {
+        onQuerySuccess("Task created");
+        setEditMode(false);
+        setSelectedTask(data);
+      },
       onError: onQueryError,
     });
   }, []);
@@ -44,7 +52,11 @@ export function useTasks() {
     return useMutation(
       (task: UpdateTaskDto) => Tasks.updateTask(selectedTask!.id, task),
       {
-        onSuccess: () => onQuerySuccess("Task updated"),
+        onSuccess: (data) => {
+          onQuerySuccess("Task updated");
+          setEditMode(false);
+          setSelectedTask(data);
+        },
         onError: onQueryError,
       }
     );
@@ -63,6 +75,21 @@ export function useTasks() {
       onError: onQueryError,
     });
   }, []);
+
+  const resetOnUserLogOut = useCallback(() => {
+    setTasks([]);
+    setSelectedTask(null);
+    setEditMode(false);
+    setSubTaskMode(false);
+  }, [userToken]);
+
+  useEffect(() => {
+    Tasks.userToken = userToken;
+
+    if (!userToken) {
+      resetOnUserLogOut();
+    }
+  }, [userToken]);
 
   return {
     tasks,

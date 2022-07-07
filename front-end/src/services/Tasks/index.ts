@@ -9,8 +9,7 @@ import { api } from "../Axios";
 import { queryClient } from "../QueryClient";
 
 export class Tasks {
-  private static _userToken: string =
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiY2w0cTI4ZGdlMDAwMTNhODJ5aHQ1a2x4biJ9LCJpYXQiOjE2NTcyMTc4MDIsImV4cCI6MTY1NzQ3NzAwMn0.dW3Xj_PG67HUIxQHOofzLtWHqCtL1TU-XxBPc2wMoXo";
+  private static _userToken: string | null = null;
 
   private static async fetchTasks<T>(
     method: FetchMethods,
@@ -34,7 +33,7 @@ export class Tasks {
     return data;
   }
 
-  static set userToken(token: string) {
+  static set userToken(token: string | null) {
     Tasks._userToken = token;
   }
 
