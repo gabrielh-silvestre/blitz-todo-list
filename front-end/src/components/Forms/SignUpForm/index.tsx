@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import type { FormInput, SignUpFormProps } from "./propTypes";
 
-import { useSignUpUser } from "../../../stores/user/useCases";
+import { useUsers } from "../../../hooks/useUsers";
 
 import {
   FormContainer,
@@ -18,7 +18,7 @@ import {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function SignUpForm({ alreadyHaveAccount, closeForm }: SignUpFormProps) {
-  const { mutate } = useSignUpUser();
+  const { signUp } = useUsers();
   const {
     register,
     handleSubmit,
@@ -31,8 +31,8 @@ export function SignUpForm({ alreadyHaveAccount, closeForm }: SignUpFormProps) {
   const onSubmit: SubmitHandler<FormInput> = (data, e) => {
     e?.preventDefault();
 
+    signUp(data);
     closeForm();
-    mutate(data);
   };
 
   return (

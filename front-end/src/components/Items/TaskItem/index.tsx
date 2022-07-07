@@ -1,24 +1,34 @@
+import type { MouseEvent } from "react";
+
 import { CompleteTaskButton } from "../../Buttons/CompleteTaskButton";
 import { DeleteTaskButton } from "../../Buttons/DeleteTaskButton";
 
 import type { TaskItemProps } from "./propTypes";
 
-import { useGetTaskById } from "../../../stores/task/useCases/GetTaskById";
+import { useTasks } from "../../../hooks/useTasks";
 
 import { ButtonContainer, ContentContainer, TaskTitle } from "./styles";
 
 export function TaskItem({ id, status, title }: TaskItemProps) {
-  const { mutate } = useGetTaskById(id);
+  const { selectedTask, setSelectedTask, setEditMode, getTaskById } = useTasks();
 
   const handleSelectTask = () => {
-    mutate(id);
+    const alreadySelected = selectedTask?.id === id;
+    alreadySelected ? setSelectedTask(null) : getTaskById(id);
+    setEditMode(false);
+  };
+
+  const disableTextSelection = (e: MouseEvent) => {
+    e.preventDefault();
   };
 
   return (
     <ContentContainer>
       <span>{status}</span>
 
-      <TaskTitle onClick={handleSelectTask}>{title}</TaskTitle>
+      <TaskTitle onClick={handleSelectTask} onMouseDown={disableTextSelection}>
+        {title}
+      </TaskTitle>
 
       <ButtonContainer>
         <CompleteTaskButton taskId={id} completed={status === "DONE"} />
