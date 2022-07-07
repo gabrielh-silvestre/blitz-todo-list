@@ -1,18 +1,12 @@
-import toast from "react-hot-toast";
 import { HiLogout } from "react-icons/hi";
 
-import { userStore } from "../../../stores/user";
+import { useUsers } from "../../../hooks/useUsers";
 
 export function LogOutButton() {
-  const { setUserToken } = userStore((state) => state);
-
-  const handleLogOut = () => {
-    setUserToken(null);
-    toast.success("Logged out successfully!");
-  };
+  const { logout } = useUsers();
 
   return (
-    <button onClick={handleLogOut}>
+    <button onClick={() => logout()}>
       <HiLogout />
     </button>
   );
