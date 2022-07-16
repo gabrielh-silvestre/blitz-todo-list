@@ -10,7 +10,7 @@ services:
     ports:
       - ${FRONT_PORT}:3000
     environment:
-      - BACK_PORT=${BACK_PORT}
+      - BACK_PORT=${PORT}
       - BACK_HOST=backend
     depends_on:
       backend:
@@ -27,14 +27,14 @@ services:
     volumes:
       - ./back-end:/app/backend
     ports:
-      - 3001:${BACK_PORT}
+      - 3001:${PORT}
     tty: true
     stdin_open: true
     depends_on:
       mysql:
         condition: service_healthy
     environment:
-      - BACK_PORT=${BACK_PORT}
+      - PORT=${PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
