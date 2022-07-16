@@ -10,8 +10,9 @@
     "test:backend": "cd back-end && npm test",
     "test:backend:result": "cd back-end && npm run test:result",
     "install:front": "cd front-end && npm install",
-    "install:back": "cd back-end && npm install && npm run build",
-    "install": "npm run install:front && npm run install:back"
+    "install:back": "cd back-end && npm install",
+    "install": "npm run install:front && npm run install:back",
+    "postinstall": "cd back-end && npm run build"
   },
   "keywords": [],
   "author": "",
